@@ -1,0 +1,39 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<jboss-deployment-structure xmlns="urn:jboss:deployment-structure:1.1">
+    <deployment>
+        <exclusions>
+            <module name="com.fasterxml.jackson.core.jackson-annotations" />
+            <module name="com.fasterxml.jackson.core.jackson-core" />
+            <module name="com.fasterxml.jackson.core.jackson-databind" />
+            <module name="com.fasterxml.jackson.datatype.jackson-datatype-jdk8"/>
+            <module name="com.fasterxml.jackson.datatype.jackson-datatype-jsr310"/>
+            <module name="com.fasterxml.jackson.jaxrs.jackson-jaxrs-json-provider" />
+            <module name="org.jboss.resteasy.resteasy-jackson2-provider" />
+            <module name="org.slf4j" />
+<!--            <module name="org.slf4j" />-->
+<!--            <module name="org.slf4j.impl" />-->
+<!--            <module name="org.apache.commons.logging" />-->
+<!--            <module name="com.fasterxml.jackson.datatype.jackson-datatype-jdk8" />-->
+<!--            <module name="com.fasterxml.jackson.datatype.jackson-datatype-jsr310" />-->
+<!--            <module name="com.fasterxml.jackson.core.jackson-annotations" />-->
+<!--            <module name="com.fasterxml.jackson.core.jackson-core" />-->
+<!--            <module name="com.fasterxml.jackson.core.jackson-databind" />-->
+<!--            <module name="com.fasterxml.jackson.jaxrs.jackson-jaxrs-json-provider" />-->
+<!--            <module name="org.jboss.resteasy.resteasy-jackson2-provider" />-->
+<!--            <module name="com.alibaba.fastjson" />-->
+<!--            <module name="javax.xml.bind.jaxb-api" />-->
+<!--            <module name="org.apache.logging.log4j.log4j-api" />-->
+        </exclusions>
+        <module-alias name="deployment.springboot-4"/>
+    </deployment>
+</jboss-deployment-structure>
+<!--<jboss-deployment-structure>-->
+<!--    <deployment>-->
+<!--        <exclude-subsystems>-->
+<!--            <subsystem name="jaxrs" />-->
+<!--        </exclude-subsystems>-->
+<!--    </deployment>-->
+<!--    <deployment>-->
+<!--        -->
+<!--    </deployment>-->
+<!--</jboss-deployment-structure>-->

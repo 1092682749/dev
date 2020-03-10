@@ -1,4 +1,4 @@
-package com.dyz.dev.dao;
+package com.dyz.dev.oneDao;
 
 import com.dyz.dev.model.User;
 import com.dyz.dev.utils.Mapper;

@@ -4,11 +4,11 @@
     <modelVersion>4.0.0</modelVersion>
 
     <groupId>com.example</groupId>
-    <artifactId>demo</artifactId>
+    <artifactId>demo02</artifactId>
     <version>0.0.1-SNAPSHOT</version>
-    <packaging>jar</packaging>
+    <packaging>war</packaging>
 
-    <name>dev</name>
+    <name>demo02</name>
     <description>Dev project for Spring Boot</description>
 
     <parent>
@@ -34,9 +34,16 @@
                     <groupId>org.springframework.boot</groupId>
                     <artifactId>spring-boot-starter-loggin</artifactId>
                 </exclusion>
+
             </exclusions>
         </dependency>
-
+        <dependency>
+            <groupId>org.springframework.boot</groupId>
+            <artifactId>spring-boot-starter-tomcat</artifactId>
+            <!--打包的时候可以不用包进去，别的设施会提供。事实上该依赖理论上可以参与编译，测试，运行等周期。
+                相当于compile，但是打包阶段做了exclude操作-->
+            <scope>provided</scope>
+        </dependency>
         <!-- https://mvnrepository.com/artifact/org.springframework.boot/spring-boot-starter-aop -->
         <dependency>
             <groupId>org.springframework.boot</groupId>
@@ -123,6 +130,12 @@
         <dependency>
             <groupId>org.springframework.boot</groupId>
             <artifactId>spring-boot-starter-thymeleaf</artifactId>
+            <exclusions>
+                <exclusion>
+                    <groupId>ch.qos.logback</groupId>
+                    <artifactId>logback-classic</artifactId>
+                </exclusion>
+            </exclusions>
         </dependency>
         <!-- https://mvnrepository.com/artifact/redis.clients/jedis -->
         <dependency>
@@ -246,6 +259,18 @@
         <!--<version>1.1</version>-->
         <!--<systemPath>${basedir}/lib/httpclient-4.3.1.wso2v1.jar</systemPath>-->
         <!--</dependency>-->
+<!--        <dependency>-->
+<!--        <groupId>com.dyz</groupId>-->
+<!--        <artifactId>activation-1.1.1.jar</artifactId>-->
+<!--        <version>1.1</version>-->
+<!--        <systemPath>${basedir}/lib/activation-1.1.1.jar</systemPath>-->
+<!--        </dependency>-->
+<!--        <dependency>-->
+<!--            <groupId>com.dyz</groupId>-->
+<!--            <artifactId>axis-1.4.jar</artifactId>-->
+<!--            <version>1.1</version>-->
+<!--            <systemPath>${basedir}/lib/axis-1.4.jar</systemPath>-->
+<!--        </dependency>-->
         <!-- https://mvnrepository.com/artifact/org.wso2.apache.httpcomponents/httpclient -->
 
         <!-- https://mvnrepository.com/artifact/org.apache.httpcomponents/httpclient -->
@@ -273,7 +298,32 @@
             <artifactId>druid</artifactId>
             <version>1.1.10</version>
         </dependency>
+        <!-- https://mvnrepository.com/artifact/tk.mybatis/mapper -->
+        <dependency>
+            <groupId>tk.mybatis</groupId>
+            <artifactId>mapper</artifactId>
+            <version>4.1.5</version>
+        </dependency>
+        <!-- https://mvnrepository.com/artifact/log4j/log4j -->
+        <dependency>
+            <groupId>log4j</groupId>
+            <artifactId>log4j</artifactId>
+            <version>1.2.17</version>
+        </dependency>
 
+        <dependency>
+            <groupId>com.dyz</groupId>
+            <artifactId>dropwizard-core-2.0.0-rc12.jar</artifactId>
+            <version>1.0</version>
+            <scope>system</scope>
+            <systemPath>${basedir}/lib/dropwizard-core-2.0.0-rc12.jar</systemPath>
+        </dependency>
+        <dependency>
+            <groupId>javax.websocket</groupId>
+            <artifactId>javax.websocket-api</artifactId>
+            <version>1.0</version>
+            <scope>provided</scope>
+        </dependency>
     </dependencies>
     <build>
         <plugins>
@@ -288,6 +338,30 @@
                     <target>${java.version}</target>
                     <encoding>UTF-8</encoding>
                     <executable>true</executable>
+                </configuration>
+            </plugin>
+            <plugin>
+                <groupId>org.apache.maven.plugins</groupId>
+                <artifactId>maven-war-plugin</artifactId>
+                <version>3.1.0</version>
+                <configuration>
+                    <warName>${project.artifactId}</warName>
+                    <webResources>
+                        <resource>
+                            <directory>lib/</directory>
+                            <targetPath>WEB-INF/lib</targetPath>
+                            <includes>
+                                <include>**/*.jar</include>
+                            </includes>
+                        </resource>
+                        <resource>
+                            <directory>${basedir}/src/main/resources</directory>
+                            <targetPath>WEB-INF/</targetPath>
+                            <includes>
+                                <include>**/*.xml</include>
+                            </includes>
+                        </resource>
+                    </webResources>
                 </configuration>
             </plugin>
         </plugins>

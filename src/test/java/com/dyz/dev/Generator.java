@@ -21,11 +21,11 @@ import java.util.*;
  */
 public class Generator {
     //JDBC配置，请修改为你项目的实际配置
-    private static final String JDBC_URL = "jdbc:mysql://dyzhello.club:3306/dev";
+    private static final String JDBC_URL = "jdbc:mysql://dyzhello.club:3306/testredis";
     private static final String JDBC_USERNAME = "root";
     private static final String JDBC_PASSWORD = "dyz";
     private static final String JDBC_DIVER_CLASS_NAME = "com.mysql.jdbc.Driver";
-    private static final String DB_PREFIX = "d";
+    private static final String DB_PREFIX = " ";
 
     private static final String PROJECT_PATH = System.getProperty("user.dir");//项目在硬盘上的基础路径
     private static final String TEMPLATE_FILE_PATH = PROJECT_PATH + "/src/test/resources/template";//模板位置
@@ -41,7 +41,7 @@ public class Generator {
     private static final String DATE = new SimpleDateFormat("yyyy/MM/dd").format(new Date());//@date
 
     public static void main(String[] args) {
-        genCode("d_user");
+        genCode("admin");
         //genCodeByCustomModelName("输入表名","输入自定义Model名称");
 //        genCodeByCustomModelName("member","qy_member");
 
@@ -55,8 +55,8 @@ public class Generator {
     public static void genCode(String... tableNames) {
         for (String tableName : tableNames) {
             //如果需要去前缀 需要去除前缀后给modelName
-//            genCodeByCustomModelName(tableName, null);
-            genCodeByCustomModelName(tableName, tableNameConvertUpperCamel(tableName.split(DB_PREFIX)[1]));
+            genCodeByCustomModelName(tableName, null);
+            //genCodeByCustomModelName(tableName, tableNameConvertUpperCamel(tableName.split(DB_PREFIX)[1]));
         }
     }
 
@@ -101,12 +101,12 @@ public class Generator {
 
         SqlMapGeneratorConfiguration sqlMapGeneratorConfiguration = new SqlMapGeneratorConfiguration();
         sqlMapGeneratorConfiguration.setTargetProject(PROJECT_PATH + RESOURCES_PATH);
-        sqlMapGeneratorConfiguration.setTargetPackage("mapper");
+        sqlMapGeneratorConfiguration.setTargetPackage("towMapper");
         context.setSqlMapGeneratorConfiguration(sqlMapGeneratorConfiguration);
 
         JavaClientGeneratorConfiguration javaClientGeneratorConfiguration = new JavaClientGeneratorConfiguration();
         javaClientGeneratorConfiguration.setTargetProject(PROJECT_PATH + JAVA_PATH);
-        javaClientGeneratorConfiguration.setTargetPackage(Constants.MAPPER_PACKAGE);
+        javaClientGeneratorConfiguration.setTargetPackage(Constants.MAPPER_TOW_PACKAGE);
         javaClientGeneratorConfiguration.setConfigurationType("XMLMAPPER");
         context.setJavaClientGeneratorConfiguration(javaClientGeneratorConfiguration);
 

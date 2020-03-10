@@ -2,9 +2,62 @@
 <html lang="en">
 <head>
     <meta charset="UTF-8">
-    <title>$Title$</title>
+    <link type="text/css" rel="stylesheet" href="/static/bootstrap/css/bootstrap.min.css"/>
+    <link type="text/css" rel="stylesheet" href="/static/bootstrap/table/bootstrap-table.min.css"/>
+    <title>aa</title>
+
 </head>
 <body>
-$END$
+<table data-toggle="table" id="table">
+    <thead>
+    <tr>
+        <th>Item ID</th>
+        <th>Item Name</th>
+        <th>Item Price</th>
+    </tr>
+    </thead>
+    <tbody>
+    <tr>
+        <td>1</td>
+        <td>Item 1</td>
+        <td>$1</td>
+    </tr>
+    <tr>
+        <td>2</td>
+        <td>Item 2</td>
+        <td>$2</td>
+    </tr>
+    </tbody>
+</table>
 </body>
 </html>
+<script src="https://cdn.bootcss.com/jquery/3.4.1/jquery.min.js"></script>
+<script src="/static/bootstrap/js/bootstrap.min.js"></script>
+<script src="/static/bootstrap/table/bootstrap-table.min.js"></script>
+<script src="/static/bootstrap/table/bootstrap-table-locale-all.js"></script>
+<script>
+    $('#table').bootstrapTable({
+        url: '/user/list',
+        pagination: true,
+        search: true,
+        dataType: 'json',
+        method: 'get',
+        columns: [{
+            field: 'username',
+            title: 'Item ID'
+        }, {
+            field: 'password',
+            title: 'Item Name'
+        }, {
+            field: 'nickname',
+            title: 'Item Price'
+        }],
+        responseHandler: function (res) {
+            console.log(res);
+            return res;
+        }
+    });
+    var data = $('#table').bootstrapTable('getData');
+    console.log(data);
+</script>
+
