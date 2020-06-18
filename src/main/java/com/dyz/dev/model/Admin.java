@@ -5,6 +5,9 @@ import javax.persistence.*;
 public class Admin {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
+
+//    @GeneratedValue(strategy = GenerationType.SEQUENCE, generator = "adminSeq")
+//    @SequenceGenerator(name = "adminSeq", sequenceName = "ADMIN_SEQUENCE", initialValue = 1, allocationSize = 1)
     private Integer id;
 
     private String username;

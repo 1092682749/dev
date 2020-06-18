@@ -42,7 +42,7 @@
             <artifactId>spring-boot-starter-tomcat</artifactId>
             <!--打包的时候可以不用包进去，别的设施会提供。事实上该依赖理论上可以参与编译，测试，运行等周期。
                 相当于compile，但是打包阶段做了exclude操作-->
-            <scope>provided</scope>
+            <scope>compile</scope>
         </dependency>
         <!-- https://mvnrepository.com/artifact/org.springframework.boot/spring-boot-starter-aop -->
         <dependency>
@@ -104,23 +104,22 @@
             <artifactId>spring-boot-starter-data-redis</artifactId>
         </dependency>
         <!-- https://mvnrepository.com/artifact/redis.clients/jedis -->
-        <!--<dependency>-->
-        <!--<groupId>redis.clients</groupId>-->
-        <!--<artifactId>jedis</artifactId>-->
-        <!--<version>2.7.3</version>-->
-        <!--</dependency>-->
-        <!--&lt;!&ndash; https://mvnrepository.com/artifact/org.springframework.data/spring-data-redis &ndash;&gt;-->
-        <!--<dependency>-->
-        <!--<groupId>org.springframework.data</groupId>-->
-        <!--<artifactId>spring-data-redis</artifactId>-->
-        <!--<version>1.7.2.RELEASE</version>-->
-        <!--</dependency>-->
+<!--        <dependency>-->
+<!--        <groupId>redis.clients</groupId>-->
+<!--        <artifactId>jedis</artifactId>-->
+<!--        <version>2.7.3</version>-->
+<!--        </dependency>-->
+<!--&lt;!&ndash;        &lt;!&ndash;&lt;!&ndash; https://mvnrepository.com/artifact/org.springframework.data/spring-data-redis &ndash;&gt;&ndash;&gt;&ndash;&gt;-->
+<!--        <dependency>-->
+<!--        <groupId>org.springframework.data</groupId>-->
+<!--        <artifactId>spring-data-redis</artifactId>-->
+<!--        <version>1.7.2.RELEASE</version>-->
+<!--        </dependency>-->
         <!--&lt;!&ndash; https://mvnrepository.com/artifact/org.springframework.boot/spring-boot-starter-redis &ndash;&gt;-->
-        <!--<dependency>-->
-        <!--<groupId>org.springframework.boot</groupId>-->
-        <!--<artifactId>spring-boot-starter-redis</artifactId>-->
-        <!--<version>1.4.3.RELEASE</version>-->
-        <!--</dependency>-->
+<!--        <dependency>-->
+<!--        <groupId>org.springframework.boot</groupId>-->
+<!--        <artifactId>spring-boot-starter-redis</artifactId>-->
+<!--        </dependency>-->
         <dependency>
             <groupId>org.junit.jupiter</groupId>
             <artifactId>junit-jupiter-api</artifactId>
@@ -136,12 +135,6 @@
                     <artifactId>logback-classic</artifactId>
                 </exclusion>
             </exclusions>
-        </dependency>
-        <!-- https://mvnrepository.com/artifact/redis.clients/jedis -->
-        <dependency>
-            <groupId>redis.clients</groupId>
-            <artifactId>jedis</artifactId>
-            <version>3.0.0</version>
         </dependency>
         <!-- https://mvnrepository.com/artifact/com.hynnet/DJNativeSwing-SWT -->
         <dependency>
