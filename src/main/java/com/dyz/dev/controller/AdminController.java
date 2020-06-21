@@ -50,4 +50,6 @@ public class AdminController {
         page.setList(list);
         return ResultGenerator.successResult(page);
     }
+
+
 }
