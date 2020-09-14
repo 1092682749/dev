@@ -15,7 +15,7 @@ public class User {
     private String nickname;
 
     @Column(name = "password")
-    private String passwor ;
+    private String password;
 
     @Column(name = "addtime")
     private Date addtime;
@@ -28,7 +28,7 @@ public class User {
     }
 
     /**
-     * @param i 
+     * @param i
      */
     public void setI (Integer i ) {
         this.i  = i ;
@@ -65,15 +65,15 @@ public class User {
     /**
      * @return password
      */
-    public String getPasswor () {
-        return passwor ;
+    public String getPassword () {
+        return password ;
     }
 
     /**
-     * @param passwor 
+     * @param passwor
      */
-    public void setPasswor (String passwor ) {
-        this.passwor  = passwor ;
+    public void setPassword (String passwor ) {
+        this.password  = passwor ;
     }
 
     /**

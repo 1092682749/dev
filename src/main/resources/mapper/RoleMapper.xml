@@ -1,0 +1,48 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.dyz.dev.dao.RoleMapper">
+  <resultMap id="BaseResultMap" type="com.dyz.dev.model.Role">
+    <!--
+      WARNING - @mbg.generated
+    -->
+    <result column="ID" jdbcType="VARCHAR" property="id" />
+    <result column="R_NAME" jdbcType="VARCHAR" property="rName" />
+    <result column="R_DESC" jdbcType="VARCHAR" property="rDesc" />
+    <result column="CREATE_TIME" jdbcType="TIMESTAMP" property="createTime" />
+    <result column="UPDATE_TIME" jdbcType="TIMESTAMP" property="updateTime" />
+    <result column="UPDAE_NT" jdbcType="VARCHAR" property="updaeNt" />
+    <result column="IS_DELETE" jdbcType="VARCHAR" property="isDelete" />
+  </resultMap>
+
+
+  <resultMap id="RolePermissionsMap" type="com.dyz.dev.model.Role">
+    <!--
+      WARNING - @mbg.generated
+    -->
+    <result column="ID" jdbcType="VARCHAR" property="id" />
+    <result column="R_NAME" jdbcType="VARCHAR" property="rName" />
+    <result column="R_DESC" jdbcType="VARCHAR" property="rDesc" />
+    <result column="CREATE_TIME" jdbcType="TIMESTAMP" property="createTime" />
+    <result column="UPDATE_TIME" jdbcType="TIMESTAMP" property="updateTime" />
+    <result column="UPDAE_NT" jdbcType="VARCHAR" property="updaeNt" />
+    <result column="IS_DELETE" jdbcType="VARCHAR" property="isDelete" />
+
+    <collection property="permissions" ofType="com.dyz.dev.model.Permission">
+      <id property="id" column="p_id" />
+      <result property="pName" column="P_NAME" />
+      <result property="pDesc" column="P_DESC" />
+    </collection>
+  </resultMap>
+
+  <select id="getRolePermissions" resultMap="RolePermissionsMap">
+    select
+    r.*,
+    p.P_NAME,
+    p.P_DESC,
+    rp.P_ID
+    from SOLVE_CENTER_TBL_ROLE r
+    left join SOLVE_CENTER_ROLE_PERMISSION rp on r.id = rp.r_id and rp.IS_DELETE = 'N' and r.IS_DELETE = 'N'
+    left join SOLVE_CENTER_TBL_PERMISSION p on rp.p_id = p.id and p.IS_DELETE = 'N'
+    where r.r_name = #{roleName}
+  </select>
+</mapper>

@@ -1,0 +1,22 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.dyz.dev.dao.CaseLikeMapper">
+  <resultMap id="BaseResultMap" type="com.dyz.dev.model.CaseLike">
+    <!--
+      WARNING - @mbg.generated
+      // TARGET_TYPE
+    @Column(name = "TARGET_TYPE")
+    private String targetType;
+  // COMMENT_ID
+  @Column(name = "COMMENT_ID")
+  private String commentId;
+    -->
+    <result column="CASE_ID" jdbcType="INTEGER" property="caseId" />
+    <result column="ACTION" jdbcType="VARCHAR" property="action" />
+    <result column="ACTION_EMPNO" jdbcType="VARCHAR" property="actionEmpno" />
+    <result column="ACTION_TIME" jdbcType="TIMESTAMP" property="actionTime" />
+    <result column="ACTION_ID" jdbcType="VARCHAR" property="actionId" />
+    <result column="TARGET_TYPE" jdbcType="VARCHAR" property="targetType" />
+    <result column="COMMENT_ID" jdbcType="INTEGER" property="commentId" />
+  </resultMap>
+</mapper>

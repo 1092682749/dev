@@ -1,0 +1,244 @@
+<div nz-row [nzGutter]="{ xs: 8, sm: 16, md: 24, lg: 32 }" style="background-color: #f9f9f9; padding: 10px">
+  <div nz-col class="gutter-row" [nzSpan]="1">
+    <div class="inner-box">
+      <!--      <nz-empty nzNotFoundContent="功能暂未开放敬请期待"></nz-empty>-->
+    </div>
+  </div>
+  <div nz-col class="gutter-row" [nzSpan]="22">
+    <div class="inner-box" (click)="showValue()">
+
+
+      <div [nzSpan]="24" nz-col style=" min-height: 500px;background-color: #fefefe">
+        <div style="text-align: center; margin-bottom: 5px"><h1
+          style="font-weight: bold">{{caseDetails?.title == undefined ? '' : caseDetails.title}}</h1>
+          发布自： {{caseDetails?.createEmpl  }}
+          <nz-avatar nz-comment-avatar nzIcon="user"
+                     [nzSrc]="'https://pf/pfPhoto/photo/'+ caseDetails?.createEmplid + '.JPG'"></nz-avatar>
+        </div>
+        <div class="ql-container ql-snow resize">
+          <div class="ql-editor" [innerHTML]="caseDetails?.content | contentToSafeHtml"></div>
+        </div>
+
+      </div>
+
+      <div [nzSpan]="24" nz-col style="background-color: #fefefe">
+        <nz-divider nzText="评论" nzOrientation="left"></nz-divider>
+        <nz-empty *ngIf="!(reviews?.length && reviews?.length > 0)" nzNotFoundContent="这里还没有评论快来添加吧"></nz-empty>
+        <div *ngFor="let review of reviews; index as i">
+
+          <nz-comment [nzAuthor]="review?.commentEmpName" [nzDatetime]="review.commentTime">
+            <nz-avatar nz-comment-avatar nzIcon="user"
+                       [nzSrc]="'https://pf/pfPhoto/photo/'+ review.commentEmpno + '.JPG'"></nz-avatar>
+            <nz-comment-content>
+              <div class="ql-container ql-snow">
+                <div class="commentContent ql-editor"><p [innerHTML]="review?.content | contentToSafeHtml">
+
+                </p></div>
+              </div>
+            </nz-comment-content>
+            <nz-comment-action>
+              <i nz-tooltip title="为ta点赞" nz-icon nzType="like" class="zoom"
+                 [ngClass]="review.likeOrUnlike == 'like' ? 'fill' : 'outline'"
+                 (click)="like('like', i)"></i>
+              <span class="count like">{{ review?.upNum }}</span>
+            </nz-comment-action>
+            <!--不需要-->
+            <!--            <nz-comment-action>-->
+            <!--              <i nz-tooltip nzTitle="Dislike" nz-icon nzType="dislike"-->
+            <!--                 [ngClass]="review.likeOrUnlike == 'unlike' ? 'fill' : 'outline'"-->
+            <!--                 [nzTheme]="review.dislikes > 0 ? 'twotone' : 'outline'" (click)="like('unlike', i)"></i>-->
+            <!--              <span class="count dislike">{{review?.downNum }}</span>-->
+            <!--            </nz-comment-action>-->
+
+
+            <nz-comment-action><span (click)="replyTo(review, i)">
+                                  <button nz-button nzType="primary" nzGhost [nzSize]="'small'">Reply to</button>
+            </span></nz-comment-action>
+
+            <!-- 采纳这个回答 -->
+            <nz-comment-action *ngIf="showAcceptButton()">
+              <button nz-button nzType="primary" nzGhost (click)="accept(review)" [nzSize]="'small'">采纳这个回答</button>
+            </nz-comment-action>
+
+            <!-- 采纳标志    -->
+            <nz-comment-action *ngIf="showAcceptFlag(review)">
+              <img class="imgAccept" src="./assets/accept.svg"/>
+            </nz-comment-action>
+
+            <!-- 删除按钮    -->
+            <nz-comment-action>
+              <!--              <span (click)="deleteComment(review)">Delete</span>-->
+              <button
+                nzType="primary" nzGhost
+                [nzSize]="'small'"
+                nz-popconfirm
+                nzPopconfirmTitle="Are you sure delete this comment?"
+                (nzOnConfirm)="confirmDeleteComment(review)"
+                (nzOnCancel)="cancelDeleteComment(review)"
+                nzPopconfirmPlacement="top"
+                nz-button
+                [acl]="[caseDetails.moduleName]"
+                [acl-ability]="'admin'"
+              >
+                <!--caseDetails.moduleName [acl-ability]="'SOLVE_CENTER_PROMISSION_ADMIN'" -->
+                Delete
+              </button>
+            </nz-comment-action>
+            <!-- 评级    -->
+            <nz-comment-action>
+              <button nz-button nzType="primary" nzGhost nz-popover [nzSize]="'small'" [nzPopoverTitle]="'评级'"
+                      [nzPopoverContent]="contentTemplate"
+                      [acl]="caseDetails?.moduleName"
+                      [acl-ability]="'admin'"
+              >
+                评级
+              </button>
+              <ng-template #contentTemplate>
+                <nz-rate [(ngModel)]="review.adminRate" (ngModelChange)="adminRate($event, review, i)" [nzAllowHalf]="false"></nz-rate>
+              </ng-template>
+            </nz-comment-action>
+            <nz-comment-action>
+              <nz-rate [(ngModel)]="review.adminRate" [nzDisabled]="true" [nzAllowHalf]="false"></nz-rate>
+            </nz-comment-action>
+            <!-- 评级   end -->
+
+            <!--            子评论-->
+            <span (click)="showAllSubReview(i)"><a *ngIf="review.children && review.children.length && !review.show"
+                                                   href="javaScript:void(0)">点击展开所有评论</a></span>
+            <div *ngIf="review.show">
+              <div *ngFor="let review1 of review.children; index as j">
+                <nz-comment [nzAuthor]="review1?.commentEmpName" [nzDatetime]="review1.commentTime">
+                  <nz-avatar nz-comment-avatar nzIcon="user"
+                             [nzSrc]="'https://pf/pfPhoto/photo/'+ review1.commentEmpno + '.JPG'"></nz-avatar>
+
+                  <nz-comment-content>
+                    <!--                     + '<h5>回复'+ review1.toEmpno +':</h5>'-->
+                    <div class="commentHeader">
+                      <p>回复  {{review1.toEmpName}}  :</p>
+                    </div>
+                    <div class="ql-container ql-snow">
+                      <div class="commentContent ql-editor"
+                           [innerHTML]="review1?.content + '' | contentToSafeHtml"></div>
+                    </div>
+
+                  </nz-comment-content>
+                  <nz-comment-action>
+                    <i nz-tooltip title="为ta点赞" nz-icon nzType="like" class="zoom"
+                       [ngClass]="review1.likeOrUnlike == 'like' ? 'fill' : 'outline'"
+                       (click)="likeChildren('like', i, j)"></i>
+                    <span class="count like">{{ review1.upNum }}</span>
+                  </nz-comment-action>
+                  <!-- 不需要 unlike-->
+                  <!--                  <nz-comment-action>-->
+                  <!--                    <i nz-tooltip nzTitle="Dislike" nz-icon nzType="dislike"-->
+                  <!--                       [ngClass]="review1.likeOrUnlike == 'unlike' ? 'fill' : 'outline'"-->
+                  <!--                       (click)="likeChildren('unlike', i, j)"></i>-->
+                  <!--                    <span class="count dislike">{{review1.downNum }}</span>-->
+                  <!--                  </nz-comment-action>-->
+                  <nz-comment-action><span (click)="replyTo(review1, i)">
+                    <button nz-button nzType="primary" nzGhost [nzSize]="'small'">Reply to</button>
+                  </span></nz-comment-action>
+
+                  <!-- 采纳这个回答 -->
+                  <nz-comment-action *ngIf="showAcceptButton()">
+                    <button nz-button nzType="primary" nzGhost (click)="accept(review1)" [nzSize]="'small'">采纳这个回答</button>
+                  </nz-comment-action>
+
+                  <!-- 采纳标志    -->
+                  <nz-comment-action *ngIf="showAcceptFlag(review1)">
+                    <img class="imgAccept" src="./assets/accept.svg"/>
+                  </nz-comment-action>
+
+                  <!-- 删除按钮    -->
+                  <nz-comment-action>
+                    <!--                    <span (click)="deleteComment(review)">Delete</span>-->
+                    <button
+                      nzType="primary" nzGhost
+                      [nzSize]="'small'"
+                      nz-popconfirm
+                      nzPopconfirmTitle="Are you sure delete this comment?"
+                      (nzOnConfirm)="confirmDeleteComment(review1)"
+                      (nzOnCancel)="cancelDeleteComment(review1)"
+                      nzPopconfirmPlacement="top"
+                      nz-button
+                      [acl]="caseDetails?.moduleName"
+                      [acl-ability]="'admin'"
+                    >
+                      Delete
+                    </button>
+                  </nz-comment-action>
+                  <!-- 评级 -->
+                  <nz-comment-action>
+                    <button nz-button nzType="primary" nzGhost nz-popover [nzSize]="'small'" [nzPopoverTitle]="'评级'"
+                            [nzPopoverContent]="contentTemplate"
+                            [acl]="caseDetails?.moduleName"
+                            [acl-ability]="'admin'"
+                    >
+                      评级
+                    </button>
+                    <ng-template #contentTemplate>
+                      <nz-rate [(ngModel)]="review1.adminRate " [nzAllowHalf]="false"
+                               (ngModelChange)="adminRate($event, review1, i)"></nz-rate>
+                    </ng-template>
+                  </nz-comment-action>
+                  <nz-comment-action>
+                    <nz-rate [(ngModel)]="review1.adminRate " [nzDisabled]="true" [nzAllowHalf]="false"></nz-rate>
+                  </nz-comment-action>
+                </nz-comment>
+
+              </div>
+            </div>
+            <span (click)="hiddenAllSubReview(i)"><a *ngIf="review.show"
+                                                     href="javaScript:void(0)">收起评论</a></span>
+          </nz-comment>
+          <nz-divider></nz-divider>
+        </div>
+
+
+        <!--        <ng-template *ngFor="let data of reviews">-->
+        <!--          <ng-template #commentTemplateRef let-comment="comment">-->
+        <!--            <nz-comment [nzAuthor]="comment.author">-->
+        <!--              <nz-avatar nz-comment-avatar nzIcon="user" [nzSrc]="comment.avatar"></nz-avatar>-->
+        <!--              <nz-comment-content>-->
+        <!--                <p >{{ comment.content }}</p>-->
+        <!--              </nz-comment-content>-->
+        <!--              <nz-comment-action>-->
+        <!--                <i nz-tooltip nzTitle="Like" nz-icon nzType="like"-->
+        <!--                   (click)="like()"></i>-->
+        <!--                <span class="count like">{{ comment.likes }}</span>-->
+        <!--              </nz-comment-action>-->
+        <!--              <nz-comment-action>-->
+        <!--                <i nz-tooltip nzTitle="Dislike" nz-icon nzType="dislike"-->
+        <!--                   (click)="dislike()"></i>-->
+        <!--                <span class="count dislike">{{ comment.dislikes }}</span>-->
+        <!--              </nz-comment-action>-->
+        <!--              <nz-comment-action><span (click)="replyTo(comment.reviewId)">Reply to</span></nz-comment-action>-->
+        <!--              <ng-container *ngIf="comment.children && comment.children.length">-->
+        <!--                <ng-template ngFor let-child [ngForOf]="comment.children">-->
+        <!--                  <ng-template [ngTemplateOutlet]="commentTemplateRef"-->
+        <!--                               [ngTemplateOutletContext]="{ comment: child }"></ng-template>-->
+        <!--                </ng-template>-->
+        <!--              </ng-container>-->
+        <!--            </nz-comment>-->
+        <!--          </ng-template>-->
+
+        <!--          <ng-template [ngTemplateOutlet]="commentTemplateRef"-->
+        <!--                       [ngTemplateOutletContext]="{ comment: data }"></ng-template>-->
+        <!--        </ng-template>-->
+      </div>
+
+      <div [nzSpan]="24" nz-col>
+        <app-tsmc-editor [(ngModel)]="content"></app-tsmc-editor>
+      </div>
+      <div [nzSpan]="24" nz-col>
+        <button nz-button nzType="primary" (click)="commentCase()">立即评论</button>
+      </div>
+
+
+    </div>
+  </div>
+  <div nz-col class="gutter-row" [nzSpan]="1">
+    <!--    <nz-empty nzNotFoundContent="功能暂未开放敬请期待"></nz-empty>-->
+  </div>
+  <!--  <div nz-col class="gutter-row" [nzSpan]="6"><div class="inner-box">col-6</div></div>-->
+</div>

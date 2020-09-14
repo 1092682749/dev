@@ -1,36 +1,57 @@
 package com.dyz.dev.utils.cache;
 
-import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.context.annotation.Bean;
-import org.springframework.data.redis.core.RedisTemplate;
-import org.springframework.data.redis.core.ValueOperations;
-import org.springframework.stereotype.Component;
+import javax.servlet.http.Cookie;
+import javax.servlet.http.HttpServletRequest;
+import javax.servlet.http.HttpServletResponse;
+import java.text.DateFormat;
+import java.text.ParseException;
+import java.text.SimpleDateFormat;
+import java.util.Arrays;
+import java.util.Date;
+import java.util.List;
+import java.util.stream.Collectors;
 
-import java.util.concurrent.TimeUnit;
+/**
+ * 缓存工具可以使用
+ */
+public interface CacheUtils {
+    public void put(String key, Object value, HttpServletRequest request) throws NoSupportCacheType;
 
-@Component
-public class CacheUtils {
-    @Autowired
-    RedisTemplate<String, Object> redisTemplate;
-
-
-    public void put(String key, Object value, Long timeout, TimeUnit unit) {
-        redisTemplate.expire(key, timeout, unit);
-        redisTemplate.opsForValue().set(key, value);
+    default public void login(String key, Object value, HttpServletRequest request, HttpServletResponse response) throws NoSupportCacheType {
+        put(key, value, request);
+      // 前后端不分离时的实现
+//        Cookie cookie = new Cookie("token", key);
+//        String path = request.getContextPath();
+//        cookie.setPath(request.getContextPath());
+//        cookie.setDomain("f");
+//        cookie.setMaxAge(30 * 60);
+//        response.addCookie(cookie);
     }
 
-    public void put(String key, Object value) {
-        redisTemplate.opsForValue().set(key, value);
-        redisTemplate.expire(key, 30, TimeUnit.MINUTES);
+    public Object get(String key, HttpServletRequest request) throws NoSupportCacheType;
 
+    public void remove(String key, HttpServletRequest request);
+
+    default public String getToken(HttpServletRequest request) {
+      String token = "";
+      // 前后端分离项目，只需要把token返回给前端，前端会把token写到header里。因此获取token方式为header里拿；
+      token = request.getHeader("token");
+        return token;
     }
 
-    public <T> T get(String key, Class<T> cla) {
-        ValueOperations valueOperations = redisTemplate.opsForValue();
-        Object o = valueOperations.get(key);
-        return cla.cast(valueOperations.get(key));
+    default public Object getUser(HttpServletRequest request) throws NoSupportCacheType {
+      String token = getToken(request);
+      return get(token, request);
     }
-    public Object get(String key) {
-        return redisTemplate.opsForValue().get(key);
+
+    default public String generateToken(String keyWord) {
+        return keyWord + "_thisismydefinetoken_" + new Date().getTime();
     }
+
+    default public boolean validToken(String token) throws ParseException {
+//      String[] arr = token.split("-");
+//      Date date = new Date(Long.valueOf(arr[arr.length - 1]));
+      return  true;
+    }
+
 }

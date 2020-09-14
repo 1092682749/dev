@@ -1,0 +1,39 @@
+<div
+  class="alain-default__nav-item"
+  nz-dropdown
+  [nzDropdownMenu]="taskMenu"
+  nzTrigger="click"
+  nzPlacement="bottomRight"
+  (nzVisibleChange)="getData()"
+>
+  <nz-badge [nzDot]="nzDot" >
+    <i nz-icon nzType="bell" class="alain-default__nav-item-icon"></i>
+  </nz-badge>
+</div>
+<nz-dropdown-menu #taskMenu="nzDropdownMenu" style="width: 290px">
+  <div nz-menu class="wd-lg">
+    <div *ngIf="loading" class="mx-lg p-lg"><nz-spin></nz-spin></div>
+    <nz-card *ngIf="!loading" nzTitle="Notifications" nzBordered="false" class="ant-card__body-nopadding wid">
+      <ng-template #extra><i nz-icon nzType="plus"></i></ng-template>
+<!--<input type="ar">-->
+      <div *ngFor="let msg of unReadMessage" nz-row [nzType]="'flex'" [nzJustify]="'center'" [nzAlign]="'middle'" class="py-sm point">
+        <div nz-col [nzSpan]="4" class="text-center">
+<!--          <nz-avatar [nzSrc]="'./assets/tmp/img/3.png'"></nz-avatar>-->
+        </div>
+        <div nz-col [nzSpan]="20">
+          <strong>{{msg.fromName}}</strong>
+<!--          <p class="mb0">-->
+            在<h2>{{msg.caseTitle}}</h2>下回复了您
+<!--          </p>-->
+          <a (click)="viewDetails(msg)" >点击查看</a>
+        </div>
+      </div>
+
+      <div nz-row>
+<!--        <div nz-col [nzSpan]="24" class="pt-md border-top-1 text-center text-grey point" (click)="sendMsg()">-->
+<!--          click to test websocket-->
+<!--        </div>-->
+      </div>
+    </nz-card>
+  </div>
+</nz-dropdown-menu>

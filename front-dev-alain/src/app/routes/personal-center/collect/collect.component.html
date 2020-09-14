@@ -1,0 +1,67 @@
+<nz-list nzItemLayout="vertical" style="padding: 20px; background-color: white">
+  <nz-list-item *ngFor="let item of list; let i = index">
+    <ng-container *ngIf="!item.loading">
+      <nz-list-item-meta>
+        <nz-list-item-meta-avatar
+          [nzSrc]="'https://pf/pfPhoto/photo/'+ item.createEmplid + '.JPG'"></nz-list-item-meta-avatar>
+        <nz-list-item-meta-title (click)="viewDetail(item)">
+          <span *ngIf="!(item.categoryId == 'share')" class="tagImg">
+              <img *ngIf="item.status == 'accept'" class="close" src="./assets/closed.svg"/>
+              <img *ngIf="!(item.status == 'accept')" class="close" src="./assets/ongoing.svg"/>
+            </span>
+          <span *ngIf="item.categoryId == 'share'" class="tagImg">
+
+              <img class="share" src="./assets/fenxiang1.svg">
+            </span>
+          <a href="javaScript:void(0)"
+          ><h3>{{ item.title }}
+
+
+          </h3>
+          </a>
+
+        </nz-list-item-meta-title>
+        <nz-list-item-meta-description>
+          <p style="word-break: break-all; color: black;">
+            {{item.brief}}
+          </p>
+        </nz-list-item-meta-description>
+      </nz-list-item-meta>
+      <!--      <p style="font-weight: 300; color: black;" [innerHTML]="item.content">-->
+      <!--      </p>-->
+      <ul nz-list-item-actions>
+        <nz-list-item-action>
+          <i class="zoom" nz-icon nzType="caret-up" nzTheme="outline" (click)="like(i, 'like')"
+             [style]="item.likeOrUnlike == 'like' ? 'color: #1890ff': ''"></i>{{item.upNum}}
+        </nz-list-item-action>
+        <!--不需要 dislike-->
+<!--        <nz-list-item-action><i class="zoom" nz-icon nzType="caret-down" nzTheme="outline" (click)="like(i, 'unlike')"-->
+<!--                                [style]="item.likeOrUnlike == 'unlike' ? 'color: #1890ff': ''"></i>{{item.downNum}}-->
+<!--        </nz-list-item-action>-->
+        <nz-list-item-action><i nz-icon nzType="message" nzTheme="outline" (click)="viewDetail(item)"></i><span
+          style="padding-left: 5px">{{item.commentsNum}}</span></nz-list-item-action>
+
+
+        <nz-list-item-action>
+<!--                    <nz-tag nzColor="success">Java</nz-tag>-->
+          <!--          <nz-tag nzColor="error">Golang</nz-tag>-->
+          <nz-tag nzColor="processing" *ngFor="let tag of item.tagArr">{{tag}}</nz-tag>
+        </nz-list-item-action>
+        <nz-list-item-action></nz-list-item-action>
+        <nz-list-item-action></nz-list-item-action>
+      </ul>
+    </ng-container>
+    <nz-skeleton *ngIf="item.loading" [nzAvatar]="true" [nzActive]="true" [nzTitle]="false"
+                 [nzLoading]="true"></nz-skeleton>
+    <nz-list-item-extra></nz-list-item-extra>
+  </nz-list-item>
+  <div class="loadmore" nz-list-load-more>
+    <button nz-button *ngIf="(!loadingMore) && (pages > pageNum)" (click)="onLoadMore()">loading more</button>
+    <span *ngIf="(pages <= pageNum)">没有更多了</span>
+  </div>
+</nz-list>
+
+<!--@primary-color: #1890ff;-->
+<!--@alain-default-header-bg: #1890ff;-->
+<!--@alain-default-aside-nav-text-hover-color: #1890ff;-->
+<!--@alain-default-aside-nav-selected-text-color: #1890ff;-->

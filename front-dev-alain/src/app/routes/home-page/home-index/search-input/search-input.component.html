@@ -1,0 +1,16 @@
+<div class="example-input" style="display: inline-block;width: 80%">
+  <nz-input-group nzSearch nzSize="large" [nzAddOnAfter]="suffixIconButton" style="width: 100%">
+    <input [placeholder]="placeholder" nz-input [(ngModel)]="inputValue" (input)="onChange($event)" [nzAutocomplete]="auto" style="width: 100%; height: 47px"/>
+  </nz-input-group>
+  <ng-template #suffixIconButton>
+<!--    <input id="searchBtn" class="search-btn" type="button"  value="Search"/>-->
+  </ng-template>
+  <nz-autocomplete #auto>
+    <nz-auto-option class="global-search-item" *ngFor="let option of options" [nzValue]="option?.title" (selectionChange)="viewDetail($event, option.caseId)">
+
+
+      <span [innerHTML]="option.title"  (click)="viewDetail($event,  option.caseId)"></span>
+
+    </nz-auto-option>
+  </nz-autocomplete>
+</div>

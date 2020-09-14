@@ -1,0 +1,63 @@
+<!DOCTYPE html>
+<html lang="en" xmlns:th="http://www.w3.org/1999/xhtml">
+<head>
+    <meta charset="UTF-8">
+    <title>Title</title>
+    <link rel="stylesheet" th:href="@{/static/bootstrap/css/bootstrap.css}">
+    <link rel="stylesheet" th:href="@{/static/fileinput/css/fileinput.css}">
+    <!--    <script src="static/fontawesome-free-5.12.0-web/js/all.js"></script>-->
+    <link rel="stylesheet" th:href="@{/static/fontawesome-free-5.12.0-web/css/all.css}">
+    <link rel="stylesheet" th:href="@{/static/fileinput/themes/explorer-fas/theme.css}">
+
+    <script th:src="@{/static/js/jquery.js}"></script>
+    <script th:src="@{/static/fileinput/js/plugins/piexif.js}"></script>
+    <script th:src="@{/static/fileinput/js/plugins/sortable.js}"></script>
+    <script th:src="@{/static/fileinput/js/fileinput.js}"></script>
+    <script th:src="@{/static/fileinput/js/locales/fr.js}"></script>
+    <script th:src="@{/static/fileinput/js/locales/es.js}"></script>
+    <script th:src="@{/static/fileinput/themes/fas/theme.js}"></script>
+    <script th:src="@{/static/fileinput/themes/explorer-fas/theme.js}"></script>
+    <script th:src="@{/static/bootstrap/js/bootstrap.js}"></script>
+
+
+
+</head>
+<body>
+
+
+    <div class="file-loading">
+        <input id="kv-explorer" type="file" name="file" multiple>
+    </div>
+    <br>
+
+</body>
+<script>
+    $("#kv-explorer").fileinput({
+        'theme': 'explorer-fas',
+        'uploadUrl': 'http://localhost:8081/IMM/imm/file/uploadFile',
+        overwriteInitial: false,
+        initialPreviewAsData: true,
+        initialPreview: [
+            // "http://lorempixel.com/1920/1080/nature/1",
+            // "http://lorempixel.com/1920/1080/nature/2",
+            // "http://lorempixel.com/1920/1080/nature/3"
+        ],
+        initialPreviewConfig: [
+            // {caption: "nature-1.jpg", size: 329892, width: "120px", url: "{$url}", key: 1},
+            // {caption: "nature-2.jpg", size: 872378, width: "120px", url: "{$url}", key: 2},
+            // {caption: "nature-3.jpg", size: 632762, width: "120px", url: "{$url}", key: 3}
+        ],
+        uploadExtraData: function () {
+            var o = {
+                    formNo: 'nnnnnnnnnn'
+            };
+            return o;
+        }
+    });
+    $("#kv-explorer").on('fileuploaded', function (e, data, previewId, index) {
+        
+    }).on('filesuccessremove', function (e, previewId, extra) {
+        
+    })
+</script>
+</html>

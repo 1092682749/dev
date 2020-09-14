@@ -1,0 +1,64 @@
+<quill-editor
+  #editorComponent
+  [styles]="{'min-height': '500px'}"
+  (onFocus)="focus($event)"
+  (onEditorChanged)="changedEditor($event)"
+  (onBlur)="blur($event)"
+  (onEditorCreated)="created($event)"
+  [(ngModel)]="content"
+  [modules]="modules"
+  (onSelectionChanged)="onSelectionChanged($event)"
+  [readOnly]="false"
+  #content2>
+  <div quill-editor-toolbar>
+              <span class="ql-formats">
+                <button class="ql-bold" [title]="'Bold'"></button>
+                <button class="ql-italic" [title]="'italic'"></button>
+                <button class="ql-underline" [title]="'underline'"></button>
+                <button class="ql-strike" [title]="'strike'"></button>
+                <button class="ql-code-block" [title]="'code-block'"></button>
+                <button class="ql-blockquote" [title]="'blockquote'"></button>
+                <button class="ql-list" [value]="'ordered'"></button>
+                <button class="ql-list" [value]="'bullet'"></button>
+                <button class="ql-script" [value]="'sub'"></button>
+                <button class="ql-script" [value]="'super'"></button>
+                <button class="ql-emoji" [title]="'emoji'"></button>
+                <button class="ql-link" [title]="'link'"></button>
+                <button class="ql-clean" [title]="'clean'"></button>
+                <button class="ql-indent" [value]="'-1'"></button>
+                <button class="ql-indent" [value]="'+1'"></button>
+                <button class="ql-header" [value]="'1'"></button>
+                <button class="ql-header" [value]="'2'"></button>
+              </span>
+    <span class="ql-formats">
+                <select class="ql-align" [title]="'Aligment'">
+                  <option selected></option>
+                  <option value="center"></option>
+                  <option value="right"></option>
+                  <option value="justify"></option>
+                </select>
+
+
+                <select class="ql-header" [title]="'header'">
+                  <option selected></option>
+                  <option value="1"></option>
+                  <option value="2"></option>
+                  <option value="3"></option>
+                </select>
+                <select class="ql-color" [title]="'color'">
+                </select>
+                <select class="ql-background" [title]="'background'">
+                </select>
+              </span>
+    <span class="ql-formats">
+                  <select class="ql-font" [title]="'font'">
+                  </select>
+              <button style="min-width: 50px" (click)="uploadFile('pic')">图片</button>
+              <button style="min-width: 50px" (click)="uploadFile('attach')">附件</button>
+
+
+            </span>
+  </div>
+
+</quill-editor>
+<input type="file" style="visibility: hidden" #fileUploadInput>

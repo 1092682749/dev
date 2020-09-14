@@ -1,0 +1,680 @@
+<!DOCTYPE html>
+<html lang="en" xmlns:th="http://www.w3.org/1999/xhtml"> <!-- xmlns:th="http://www.w3.org/1999/xhtml" -->
+<head>
+    <meta charset="utf-8">
+    <title>test</title>
+    <!-- Tell the browser to be responsive to screen width -->
+    <meta content="width=device-width, initial-scale=1, maximum-scale=1, user-scalable=no" name="viewport">
+<!--    <link rel="shortcut icon" type="image/x-icon" th:href="@{/static/hlg/dist/img/favicon.ico}">-->
+    <!-- Bootstrap 3.3.6 -->
+    <link rel="stylesheet" th:href="@{/static/hlg/plugins/bootstrap/css/bootstrap.min.css}">
+    <!--    <link rel="stylesheet" href="bootstrap-3.3.7/css/bootstrap.min.css">-->
+    <!-- Font Awesome -->
+    <link rel="stylesheet" th:href="@{/static/hlg/dist/css/font-awesome.min.css}">
+    <!-- Ionicons -->
+    <link rel="stylesheet" th:href="@{/static/hlg/dist/css/ionicons.min.css}">
+    <!-- jvectormap -->
+    <link rel="stylesheet" th:href="@{/static/hlg/plugins/jvectormap/jquery-jvectormap-1.2.2.css}">
+    <!-- Theme style -->
+    <link rel="stylesheet" th:href="@{/static/hlg/dist/css/AdminLTE.min.css}">
+    <!-- AdminLTE Skins. Choose a skin from the css/skins
+         folder instead of downloading all of them to reduce the load. -->
+    <link rel="stylesheet" th:href="@{/static/hlg/dist/css/skins/_all-skins.min.css}">
+    <!--    layui-->
+    <link rel="stylesheet" th:href="@{/static/layui/css/layui.css}">
+
+
+    <link rel="stylesheet" th:href="@{/static/bootstrap-datetimepicker-master/css/bootstrap-datetimepicker.css}">
+   
+    <style>
+
+        .row {
+            margin-bottom: 10px;
+        }
+
+        .layui-colla-title {
+            height: 55px;
+            line-height: 55px;
+            color: #49a9ee;
+            background-color: #ffffff;
+            font-weight: 600;
+            font-size: 23px;
+        }
+        .layui-input-block input {
+            margin-bottom: 10px;
+        }
+        .checkbox-box input {
+            zoom: 180%;
+        }
+        .checkbox-box {
+            vertical-align: middle;
+        }
+    </style>
+
+</head>
+<body class="hold-transition skin-blue sidebar-mini">
+<div class="wrapper" id="app" ></div>
+<div class="layout">
+    <Layout>
+        <i-header th:fragment="header">
+            <i-menu mode="horizontal" theme="dark" active-name="1" style="background: -webkit-gradient(linear, 0% 100%, 0% 0%, from(rgb(0, 0, 0)), to(rgb(71, 71, 71)));height: 52px;line-height: 52px;">
+                <div class="layout-logo">
+                    <div style="margin-left:20px;float:left;display:inline"><img
+                            th:src="@{/static/hlg/dist/img/logo.png}" width="45px" height="45px"/></div>
+                    <span class="sys-name">测试服务申请单</span>
+                </div>
+                <div class="layout-nav" style="width: 305px;">
+                    <Menu-item name="1">
+                        <img th:src="'http://pf.tsmc.com.tw/pfPhoto/photo/' + ${session.user.empNo} + '.JPG'" style="width: 50px;height: 50px;"
+                             class="user-image" alt="User Image">
+                        <span class="hidden-xs" th:text="${session.user.cnameSh}"></span>
+                    </Menu-item>
+                    <a th:href="@{/logout}">
+                        <Menu-item name="2">
+                            <span><i class="fa fa-sign-out fa-lg" aria-hidden="true" style="    color: white;">Logout</i></span>
+                        </Menu-item>
+                    </a>
+                </div>
+            </i-menu>
+        </i-header>
+        <Layout>
+            <Sider hide-trigger :style="{background: '#fff'}" th:fragment="aside">
+                <i-menu :active-name="activeItem" theme="light" width="auto"
+                        style="height: 100vh">
+                    <a th:href="@{/waitSign}" style="color: black">
+                        <Menu-item key="1" name="1">
+                            <Icon type="ios-pricetags"></Icon>
+                            待签核
+                        </Menu-item>
+                    </a>
+                    <a th:href="@{/application_query}" id="recordQuery" style="color: black">
+                        <Menu-item key="2" name="2">
+                            <Icon type="ios-search"></Icon>
+                            申请记录查询
+                        </Menu-item>
+                    </a>
+                    <a th:href="@{/form/createTSRForm}" id="createForm" style="color: black">
+                        <Menu-item key="3" name="3">
+                            <Icon type="ios-create"></Icon>
+                            新测试申请
+                        </Menu-item>
+                    </a>
+                </i-menu>
+            </Sider>
+        </Layout>
+    </Layout>
+</div>
+<!--<header class="main-header" style="    background: -webkit-gradient(linear, left bottom, left top, color-stop(0, #000000), color-stop(1, #474747));">-->
+
+<!--    &lt;!&ndash; Logo &ndash;&gt;-->
+<!--    <a href="#" class="logo" style="background: -webkit-gradient(linear, left bottom, left top, color-stop(0, #000000), color-stop(1, #474747));">-->
+<!--        &lt;!&ndash; mini logo for sidebar mini 50x50 pixels &ndash;&gt;-->
+<!--        <span class="logo-mini"><b>O</b>A</span>-->
+<!--        &lt;!&ndash; logo for regular state and mobile devices &ndash;&gt;-->
+<!--        <span class="logo-lg"><b>OA-NOTES </b></span>-->
+<!--    </a>-->
+
+<!--    &lt;!&ndash; Header Navbar: style can be found in header.less &ndash;&gt;-->
+<!--    <nav class="navbar navbar-static-top" style="background: -webkit-gradient(linear, left bottom, left top, color-stop(0, #000000), color-stop(1, #474747));">-->
+<!--            &lt;!&ndash; Sidebar toggle button&ndash;&gt;-->
+<!--            <a th:href="@{#}" class="sidebar-toggle" data-toggle="offcanvas" role="button">-->
+<!--                <span class="sr-only">Toggle navigation</span>-->
+<!--            </a>-->
+<!--            &lt;!&ndash; Navbar Right Menu &ndash;&gt;-->
+<!--            <div class="navbar-custom-menu">-->
+<!--                <ul class="nav navbar-nav">-->
+<!--                    &lt;!&ndash; User Account: style can be found in dropdown.less &ndash;&gt;-->
+<!--                    <li class="dropdown user user-menu">-->
+<!--                        <a th:href="@{#}" class="dropdown-toggle" data-toggle="dropdown">-->
+<!--                            <img th:src="@{/static/hlg/dist/img/user2-160x160.jpg}" class="user-image" alt="User Image">-->
+<!--                            <span class="hidden-xs" th:text="${session.user.cnameSh}"></span>-->
+<!--                        </a>-->
+                    </li>
+                    <!-- Control Sidebar Toggle Button -->
+                    <li>
+                        <a th:href="@{/logout}"><i class="fa fa-sign-out fa-lg" aria-hidden="true">Logout</i></a>
+                    </li>
+                </ul>
+            </div>
+
+        </nav>
+    </header>
+     Left side column. contains the logo and sidebar
+
+    <aside class="main-sidebar" style="font-family: monospace;
+    font-size: 20px;" th:fragment="asid1e">
+        <!-- sidebar: style can be found in sidebar.less -->
+        <section class="sidebar">
+            <!-- sidebar menu: : style can be found in sidebar.less -->
+            <ul class="sidebar-menu">
+                <li>
+                    <a th:href="@{/IncomingHome}" id="IncomingHome_A" class="leftItem">
+                    <i class="fa fa-pie-chart"></i>
+                    <span style="font-size:16px;font-weight:bold;">申请记录查询</span>
+                </a>
+                </li>
+
+                <li>
+                    <a th:href="@{/IncomingNMSE}"   class="leftItem" id="IncomingNMSE_A">
+                        <i class="fa fa-edit"></i> <span style="font-size:16px;font-weight:bold;">新建新物料/供应商评估</span>
+                    </a>
+
+                </li>
+
+                <li>
+                    <a th:href="@{/IncomingPCN}"  class="leftItem" id="IncomingPCN_A">
+                        <i class="fa fa-edit"></i> <span style="font-size:16px;font-weight:bold;">新建制程/规格变更</span>
+                    </a>
+
+                </li>
+
+                <li>
+                    <a th:href="@{/IncomingRMQC}"   class="leftItem" id="IncomingRMQC_A">
+                        <i class="fa fa-edit"></i> <span style="font-size:16px;font-weight:bold;">抱怨系统</span>
+                    </a>
+
+                </li>
+
+
+            </ul>
+        </section>
+        <!-- /.sidebar -->
+
+    </aside>
+
+    <!-- Content Wrapper. Contains page content -->
+    <div class="content-wrapper">
+        <!-- Content Header (Page header) -->
+        <!-- <section class="content-header">
+            <h1>
+                Dashboard
+                <small>Version 2.0</small>
+            </h1>
+            <ol class="breadcrumb">
+                <li><a href="#"><i class="fa fa-dashboard"></i> Home</a></li>
+                <li class="active">Dashboard</li>
+            </ol>
+        </section> -->
+
+        <!-- Main content -->
+        
+        <div style="height:897px;">
+<!--        <iframe frameborder="0" scrolling="yes" style="width:100%;height:100%" src="" id="showRight" name="showRight"></iframe>-->
+        </div>
+        <!--        <section class="layui-container">-->
+        <!-- <div class="layui-row" style="text-align: center; font-weight: 500; font-family: -webkit-pictograph; ">
+            <h2>New CN-Test Testing Service Requisition</h2>
+        </div> -->
+        <!--            面板 start-->
+
+        <!-- <div style="margin-top: 10px">
+            <div class="layui-collapse">
+                <div class="layui-colla-item">
+                    <h2 class="layui-colla-title">基本资料</h2>
+                    <div class="layui-colla-content layui-show">
+
+                        <div class="panel panel-info">
+                            <div class="panel-body ">
+                                                               Panel content
+                                             申请人信息                 
+                                <div class="row">
+                                    <div class="col-lg-3">
+                                        <div class="input-group input-group-lg">
+                                            <span class="input-group-addon" id="sizing-addon1"><span style="color: red">*</span>申请人工号</span>
+                                            <input type="text" class="form-control" placeholder="申请人工号"
+                                                   aria-describedby="sizing-addon1" disabled>
+                                        </div>
+                                    </div>
+
+                                    <div class="col-lg-3">
+                                        <div class="input-group input-group-lg">
+                                            <span class="input-group-addon" id="sizing-addon2"><span style="color: red">*</span>申请人姓名</span>
+                                            <input type="text" class="form-control" placeholder="申请人姓名"
+                                                   aria-describedby="sizing-addon2" disabled>
+                                        </div>
+                                    </div>
+
+                                    <div class="col-lg-3">
+                                        <div class="input-group input-group-lg">
+                                            <span class="input-group-addon" id="sizing-addon3"><span style="color: red">*</span>申请人部门</span>
+                                            <input type="text" class="form-control" placeholder="申请人部门"
+                                                   aria-describedby="sizing-addon3" disabled>
+                                        </div>
+                                    </div>
+
+                                    <div class="col-lg-3">
+                                        <div class="input-group input-group-lg">
+                                            <span class="input-group-addon" id="sizing-addon4"><span style="color: red">*</span>申请人Mail</span>
+                                            <input type="text" class="form-control" placeholder="申请人Mail"
+                                                   aria-describedby="sizing-addon4" disabled>
+                                        </div>
+                                    </div>
+                                </div>
+
+                                <div class="row">
+                                    <div class="col-lg-3">
+                                        <div class="input-group input-group-lg">
+                                            <span class="input-group-addon" id="sizing-addon5"><span style="color: red">*</span>申请人电话</span>
+                                            <input type="text" class="form-control" placeholder="申请人电话"
+                                                   aria-describedby="sizing-addon5">
+                                        </div>
+                                    </div>
+                                    <div class="col-lg-3">
+                                        <div class="input-group input-group-lg">
+                                            <span class="input-group-addon" id="sizing-addon6"><span style="color: red">*</span>申请类别</span>
+                                            <select class="form-control">
+                                                <option>普通件</option>
+                                                <option>急件</option>
+                                                <option>特急件</option>
+                                            </select>
+                                        </div>
+                                    </div>
+
+                                    <div class="col-lg-3">
+                                        <div class="input-group input-group-lg">
+                                            <span class="input-group-addon" id="sizing-addon7"><span style="color: red">*</span>申请项目</span>
+                                            <select class="form-control">
+                                                <option>量产货委测</option>
+                                                <option>工程货委测</option>
+                                                <option>其他</option>
+                                            </select>
+                                        </div>
+                                    </div>
+
+                                    <div class="col-lg-3">
+                                        <div class="input-group input-group-lg">
+                                            <span class="input-group-addon" id="sizing-addon8"><span style="color: red">*</span>申请日期</span>
+                                            <input type="text" class="form-control" placeholder="申请日期" id="apply-time"
+                                                   aria-describedby="sizing-addon8">
+                                        </div>
+                                    </div>
+
+
+                                </div>
+
+                                <div class="row">
+                                    <div class="col-lg-3">
+                                        <div class="input-group input-group-lg">
+                                            <span class="input-group-addon" id="sizing-addon10"><span
+                                                    style="color: red">*</span>机台类型</span>
+                                            <input type="text" class="form-control" placeholder="机台类型"
+                                                   aria-describedby="sizing-addon10">
+                                        </div>
+                                    </div>
+                                </div>
+
+                            </div>
+                        </div>
+
+                    </div>
+                </div>
+
+                <div class="layui-colla-item">
+                    <h2 class="layui-colla-title">产品资料</h2>
+                    <div class="layui-colla-content layui-show">
+
+                        <div class="panel panel-info">
+                            <div class="panel-body">
+                                                               Panel content
+                                <div class="row">
+                                    <div class="col-lg-3">
+                                        <div class="input-group input-group-lg">
+                                            <span class="input-group-addon" id="sizing-addon11"><span
+                                                    style="color: red">*</span>型号(全码)</span>
+                                            <input type="text" class="form-control" placeholder="机台类型"
+                                                   aria-describedby="sizing-addon11">
+                                        </div>
+                                    </div>
+                                    <div class="col-lg-3">
+                                        <div class="input-group input-group-lg">
+                                            <span class="input-group-addon" id="sizing-addon12"><span
+                                                    style="color: red">*</span>批号</span>
+                                            <input type="text" class="form-control" placeholder="批号"
+                                                   aria-describedby="sizing-addon12">
+                                        </div>
+                                    </div>
+                                    <div class="col-lg-3">
+                                        <div class="input-group input-group-lg">
+                                            <span class="input-group-addon" id="sizing-addon13"><span
+                                                    style="color: red">*</span>数量</span>
+                                            <input type="text" class="form-control" placeholder="数量"
+                                                   aria-describedby="sizing-addon13">
+                                        </div>
+                                    </div>
+                                    <div class="col-lg-3">
+                                        <div class="input-group input-group-lg">
+                                            <span class="input-group-addon" id="sizing-addon14"><span
+                                                    style="color: red">*</span>产品形式</span>
+                                            <select class="form-control">
+                                                <option>8" wafer</option>
+                                                <option>12" wafer</option>
+                                            </select>
+                                        </div>
+                                    </div>
+                                </div>
+
+                                <div class="row">
+                                    <div class="col-lg-3">
+                                        <div class="input-group input-group-lg">
+                                            <span class="input-group-addon" id="sizing-addon15"><span
+                                                    style="color: red">*</span>厚度</span>
+                                            <input type="text" class="form-control" placeholder="厚度"
+                                                   aria-describedby="sizing-addon15">
+                                        </div>
+                                    </div>
+                                    <div class="col-lg-3">
+                                        <div class="input-group input-group-lg">
+                                            <span class="input-group-addon" id="sizing-addon16"><span
+                                                    style="color: red">*</span>是否为Combo Chip</span>
+                                            <select class="form-control">
+                                                <option>是</option>
+                                                <option>否</option>
+                                            </select>
+                                        </div>
+                                    </div>
+
+                                    <div class="col-lg-3">
+                                        <div class="input-group input-group-lg">
+                                            <span class="input-group-addon" id="sizing-addon17"><span
+                                                    style="color: red">*</span>指定Device</span>
+                                            <input type="text" class="form-control" placeholder="指定Device"
+                                                   aria-describedby="sizing-addon17">
+                                        </div>
+                                    </div>
+
+                                </div>
+
+                                <div class="row">
+                                    <div class="col-lg-6">
+                                        <div class="input-group input-group-lg">
+                                            <span class="input-group-addon" id="sizing-addon18"><span
+                                                    style="color: red">*</span>选择刻号</span>
+                                            <input type="text" class="form-control" placeholder="选择刻号"
+                                                   aria-describedby="sizing-addon18">
+                                        </div>
+                                    </div>
+                                    <div class="col-lg-3">
+                                        <button type="button" class="btn btn-info btn-lg" id="selectEngravedBtn">选择刻号
+                                        </button>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+
+                    </div>
+                </div>
+
+                <div class="layui-colla-item">
+                    <h2 class="layui-colla-title">产线课长确认</h2>
+                    <div class="layui-colla-content layui-show">
+
+                        <div class="panel panel-info">
+                            <div class="panel-body">
+                                                               Panel content
+                            </div>
+                        </div>
+
+                    </div>
+                </div>
+                <div class="layui-colla-item">
+                    <h2 class="layui-colla-title">库房人员签收</h2>
+                    <div class="layui-colla-content layui-show">
+
+                        <div class="panel panel-info">
+                            <div class="panel-body">
+                                                               Panel content
+
+
+                            </div>
+                        </div>
+
+                    </div>
+                </div>
+                <div class="layui-colla-item">
+                    <h2 class="layui-colla-title">产线课长Final确认</h2>
+                    <div class="layui-colla-content layui-show">
+
+                        <div class="panel panel-info">
+                            <div class="panel-body">
+                                                               Panel content
+                            </div>
+                        </div>
+
+                    </div>
+                </div>
+            </div>
+        </div> -->
+
+        <!--            面板 end-->
+        <!--        </section>-->
+        <!-- /.content -->
+    </div>
+    <!-- /.content-wrapper -->
+
+    <!--    <footer class="main-footer">-->
+    <!--        <div class="pull-right hidden-xs">-->
+    <!--            <b>Version</b> 2.3.6-->
+    <!--        </div>-->
+    <!--        <strong>Copyright &copy; 2014-2016 <a href="http://almsaeedstudio.com">Almsaeed Studio</a>.</strong> All rights-->
+    <!--        reserved.-->
+    <!--    </footer>-->
+    <div class="control-sidebar-bg"></div>
+
+    <!--    ——————————————————————————————————————modals——————————————————————————————————————  -->
+    <!-- 模态框（Modal） -->
+    <div class="modal fade" id="engravedModel" tabindex="-1" role="dialog" aria-labelledby="myModalLabel"
+         aria-hidden="true">
+        <div class="modal-dialog">
+            <div class="modal-content">
+                <div class="modal-header">
+                    <button type="button" class="close" data-dismiss="modal" aria-hidden="true">&times;</button>
+                    <h4 class="modal-title" id="myModalLabel">刻号</h4>
+
+                </div>
+                <div class="modal-body ">
+<!--                    <div class="layui-input-block">-->
+                        <div class="row checkbox-box" style="text-align: center" >
+                            <input type="checkbox" id="inlineCheckbox1" name="engraved" v-model="engraved" value="1"
+                                   title="01 "><span>01</span>
+
+                            <input type="checkbox" id="inlineCheckbox2" name="engraved" v-model="engraved" value="2"
+                                   title="02 ">02
+
+
+                            <input type="checkbox" id="inlineCheckbox3" name="engraved" v-model="engraved" value="3"
+                                   title="03">03
+
+
+                            <input type="checkbox" id="inlineCheckbox4" name="engraved" v-model="engraved" value="4"
+                                   title="04">04
+
+
+                            <input type="checkbox" id="inlineCheckbox5" name="engraved" v-model="engraved" value="5"
+                                   title="05">05
+
+
+                            <input type="checkbox" id="inlineCheckbox6" name="engraved" v-model="engraved" value="6"
+                                   title="06">06
+
+                            <input type="checkbox" id="inlineCheckbox7" name="engraved" v-model="engraved" value="7"
+                                   title="07">07
+
+                            <input type="checkbox" id="inlineCheckbox8" name="engraved" v-model="engraved" value="8"
+                                   title="08">08
+
+                            <input type="checkbox" id="inlineCheckbox9" name="engraved" v-model="engraved" value="9"
+                                   title="09">09
+
+                            <input type="checkbox" id="inlineCheckbox10" name="engraved" v-model="engraved" value="10"
+                                   title="10">10
+                        </div>
+
+                        <div class="row checkbox-box" style="text-align: center">
+
+                            <input type="checkbox" id="inlineCheckbox11" name="engraved" v-model="engraved" value="11"
+                                   title="11">11
+
+                            <input type="checkbox" id="inlineCheckbox25" name="engraved" v-model="engraved" value="12"
+                                   title="12">12
+
+                            <input type="checkbox" id="inlineCheckbox12" name="engraved" v-model="engraved" value="13"
+                                   title="13">13
+
+                            <input type="checkbox" id="inlineCheckbox13" name="engraved" v-model="engraved" value="14"
+                                   title="14">14
+
+                            <input type="checkbox" id="inlineCheckbox14" name="engraved" v-model="engraved" value="15"
+                                   title="15">15
+
+                            <input type="checkbox" id="inlineCheckbox15" name="engraved" v-model="engraved" value="16"
+                                   title="16">16
+
+                            <input type="checkbox" id="inlineCheckbox16" name="engraved" v-model="engraved" value="17"
+                                   title="17">17
+
+
+                            <input type="checkbox" id="inlineCheckbox17" name="engraved" v-model="engraved" value="18"
+                                   title="18">18
+
+                            <input type="checkbox" id="inlineCheckbox18" name="engraved" v-model="engraved" value="19"
+                                   title="19">19
+
+
+                            <input type="checkbox" id="inlineCheckbox19" name="engraved" v-model="engraved" value="20"
+                                   title="20">20
+                        </div>
+
+                    <div class="row checkbox-box" style="margin-left: 63px">
+
+                        <input type="checkbox" id="inlineCheckbox20" name="engraved" v-model="engraved" value="21"
+                               title="21">21
+
+
+                        <input type="checkbox" id="inlineCheckbox21" name="engraved" v-model="engraved" value="22"
+                               title="22">22
+
+
+                        <input type="checkbox" id="inlineCheckbox22" name="engraved" v-model="engraved" value="23"
+                               title="23">23
+
+
+                        <input type="checkbox" id="inlineCheckbox23" lay-skin="primary" name="engraved" v-model="engraved" value="24"
+                               title="24">24
+
+                        <input type="checkbox" id="inlineCheckbox24" name="engraved" v-model="engraved" value="25"
+                               title="25">25
+                    </div>
+
+                </div>
+                <div class="modal-footer">
+                    <button type="button" class="btn btn-default" data-dismiss="modal">关闭</button>
+                    <button type="button" class="btn btn-primary" v-on:click="selectEngraved($event)">确定</button>
+                </div>
+            </div><!-- /.modal-content -->
+        </div><!-- /.modal -->
+    </div>
+</div>
+<!-- ./wrapper -->
+
+<!-- jQuery 2.2.3 -->
+<script th:src="@{/static/hlg/plugins/jQuery/jquery-2.2.3.min.js}"></script>
+<script th:src="@{/static/hlg/plugins/jQuery/jquery-2.2.3.min.js}"></script>
+<!-- Bootstrap 3.3.6 -->
+<script th:src="@{/static/hlg/plugins/bootstrap/js/bootstrap.min.js}"></script>
+<!-- FastClick -->
+<script th:src="@{/static/hlg/plugins/fastclick/fastclick.js}"></script>
+<!-- AdminLTE App -->
+<script th:src="@{/static/hlg/dist/js/app.min.js}"></script>
+<!-- Sparkline -->
+<script th:src="@{/static/hlg/plugins/sparkline/jquery.sparkline.min.js}"></script>
+<!-- jvectormap -->
+<script th:src="@{/static/hlg/plugins/jvectormap/jquery-jvectormap-1.2.2.min.js}"></script>
+<script th:src="@{/static/hlg/plugins/jvectormap/jquery-jvectormap-world-mill-en.js}"></script>
+<!-- SlimScroll 1.3.0 -->
+<script th:src="@{/static/hlg/plugins/slimScroll/jquery.slimscroll.min.js}"></script>
+<!-- ChartJS 1.0.1 -->
+<script th:src="@{/static/hlg/plugins/chartjs/Chart.min.js}"></script>
+<script th:src="@{/static/vue/dist/vue.js}"></script>
+<script th:src="@{/static/layui/layui.js}"></script>
+<!-- <script th:src="@{/static/layer/layer.js}"></script> -->
+<script th:src="@{/static/bootstrap-datetimepicker-master/js/bootstrap-datetimepicker.js}"></script>
+</body>
+
+<script>
+    // TODO *************************************************************** 变量定义区 初始化和定义变量*******************************************************************************************
+
+    // TODO *************************************************************** VUE初始化区 用来加载VUE对象 *******************************************************************************************
+    var app = new Vue({
+        el: '#app',
+        data: {
+            apply_time: '',
+            valuep: 'aaa',
+            engraved: [],
+        },
+        watch: {
+            apply_time: function () {
+                console.log('this is watch');
+                console.log(this.apply_time);
+            },
+            valuep: function () {
+                console.log(this.valuep);
+            }
+        },
+        computed: {},
+        methods: {
+            selectEngraved: function (e) {
+                console.log(this.engraved);
+            }
+        }
+
+    });
+
+    // TODO *************************************************************** 插件加载区 ***********************************************************************************************
+    //注意：折叠面板 依赖 element 模块，否则无法进行功能性操作
+    layui.use('element', function () {
+        var element = layui.element;
+    });
+    layui.use('form', function () {
+        var form = layui.form;
+
+        //监听提交
+        form.on('submit(formDemo)', function (data) {
+            layer.msg(JSON.stringify(data.field));
+            return false;
+        });
+    });
+    // TODO *************************************************************** 调用区 显式调用的方法都要在这里调用***************************************************************************************************
+    onInit();
+
+    // TODO *************************************************************** 方法定义区 ************************************************************************************************
+    // 初始化加载函数
+    function onInit() {
+        $('#apply-time').datetimepicker({
+            format: 'yyyy/mm/dd', // 日期格式
+            minView: 2, // 最小视图 2 代表月 0， 代表hour。 1，代表day 详细的请翻阅官网
+            maxValue: 2, // 最大视图
+        }).on('changeDate', function (e) {
+            app.apply_time = e.date.toLocaleDateString();
+        });
+        $('#selectEngravedBtn').click(function (e) {
+            $('#engravedModel').modal('show');
+        });
+        setLeftItems();
+    }
+
+    function setLeftItems() {
+        var url = window.location.href;
+        url.indexOf()
+        var strArr = url.split("/");
+        var object  = strArr[strArr.length - 1];
+        $('.leftItem').each(function (i, element) {
+            console.log(element);
+            var href = $(element).attr("href");
+            var flag = url.indexOf(href); //href.indexOf()
+            if (flag != -1) {
+                $(element).attr("background-color", "#0d0f15");
+            }
+        });
+    }
+</script>
+</html>

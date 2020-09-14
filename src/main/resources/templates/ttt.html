@@ -1,0 +1,42 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>Title</title>
+</head>
+<style>
+  a {
+    display: inline-block;
+    width: 100px;
+    height: 50px;
+    background: green;
+    color: white;
+    text-align: center;
+    line-height: 50px;
+    border-radius: 5px;
+    cursor: pointer;
+  }
+</style>
+<body>
+  <a>asd</a>
+  <div style="background-color:blue; width: 50px;height:50px">asdasdasd</div>
+  <input type="radio" checked="true">
+</body>
+</html>
+<script>
+    var a = document.getElementsByTagName('a')[0]
+    var hxr = new XMLHttpRequest();
+    hxr.onreadystatechange = function() {
+        console.log(JSON.parse(hxr.responseText));
+    }
+    a.onclick = function() {
+
+        hxr.open('get','http://localhost:8080/caseForm/list');
+        hxr.send();
+        hxr
+
+    }
+    // var hxr = new XMLHttpRequest();
+    // hxr.open('get','http://localhost:8080/caseForm/list');
+    // hxr.send();
+</script>

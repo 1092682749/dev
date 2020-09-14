@@ -1,25 +1,27 @@
 package com.dyz.dev.controller;
 import	java.util.HashMap;
 
-import com.alibaba.druid.pool.DruidDataSource;
 import com.alibaba.fastjson.JSONObject;
-import com.dyz.dev.utils.Result;
-import com.dyz.dev.utils.ResultGenerator;
+import com.github.pagehelper.PageHelper;
 import com.dyz.dev.model.User;
 import com.dyz.dev.service.UserService;
 import com.dyz.dev.utils.PageBean;
-import com.github.pagehelper.PageHelper;
-import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.beans.factory.annotation.Qualifier;
+import com.dyz.dev.utils.Result;
+import com.dyz.dev.utils.ResultGenerator;
+
+import com.dyz.dev.utils.cache.CacheUtils;
+import com.dyz.dev.utils.cache.NoSupportCacheType;
 import org.springframework.web.bind.annotation.*;
 import org.springframework.web.servlet.ModelAndView;
 
 import javax.annotation.Resource;
-import javax.sql.DataSource;
+import javax.servlet.http.HttpServletRequest;
 import java.io.IOException;
 import java.nio.channels.AsynchronousChannel;
 import java.util.List;
 import java.util.Map;
+
+import static com.dyz.dev.utils.Constants.MODULE_NAME;
 
 /**
 * Created by dyz on 2019/06/12.
@@ -30,13 +32,8 @@ public class UserController {
     @Resource
     private UserService userService;
 
-    @Autowired
-    @Qualifier("towDataSource")
-    DataSource towDataSource;
-
-    @Autowired
-    @Qualifier("oneDataSource")
-    DataSource oneDataSource;
+    @Resource
+    private CacheUtils cacheUtils;
 
     @PostMapping("/add")
     public Result add(@RequestBody User user) {
@@ -57,10 +54,17 @@ public class UserController {
     }
 
     @GetMapping("/detail")
-    public Result detail(@RequestParam Integer id) {
-        User user = userService.findById(id);
+    public Result detail(@RequestParam Object id) {
+        User user = null;
+        if (id instanceof String) {
+        	user = userService.findByStringId((String)id);
+        } else {
+        	user = userService.findById((Integer)id);
+        }
+
         return ResultGenerator.successResult(user);
     }
+
 
     @GetMapping("/list")
     public List<User> list(PageBean<User> page) {
@@ -74,15 +78,17 @@ public class UserController {
         return list;
     }
 
-    @ResponseBody
-    @RequestMapping("/change")
-    public String change() {
-    DruidDataSource oneDruidDataSource = (DruidDataSource) oneDataSource;
-    DruidDataSource towDruidDataSource = (DruidDataSource) towDataSource;
-    ((DruidDataSource) oneDruidDataSource).setPassword("root111");
-    towDruidDataSource.setPassword("root111");
-    return "成功设置!";
-}
+  @GetMapping("/auth")
+  public Result auth(HttpServletRequest request) throws NoSupportCacheType {
+    String permissions = (String) cacheUtils.get("permissions", request);
+    String roles = (String) cacheUtils.get("roles", request);
+    roles += "," + cacheUtils.get(MODULE_NAME, request);
+    Map<String,String> auth = new HashMap<>();
+    auth.put("permissions",permissions);
+    auth.put("roles",roles);
+    return ResultGenerator.successResult(auth);
+  }
+
 }
 
 

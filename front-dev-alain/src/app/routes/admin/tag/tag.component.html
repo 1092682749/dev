@@ -1,0 +1,20 @@
+<page-header [action]="phActionTpl" [home]="" [homeI18n]="'menu.main'">
+  <ng-template #phActionTpl>
+    <button (click)="add()" nz-button nzType="primary">新建</button>
+<!--    <div nz-col [nzSpan]="24">-->
+<!--      <nz-card nzTitle="按钮粒度">-->
+<!--        ACL原始数据：{{ aclSrv.data | json }}-->
+<!--        <button nz-button [acl]="'SOLVE_CENTER_ROOT_ADMIN'">role-a</button>-->
+<!--        <button nz-button [acl]="'SOLVE_CENTER_ROOT_ADMIN'" [acl-ability]="'roota'" class="ml-sm">role-b</button>-->
+<!--      </nz-card>-->
+<!--    </div>-->
+<!--    <button (click)="add()" nz-button nzType="primary">新建</button>-->
+<!--    <button nz-button (click)="toggleRoleA()">-->
+<!--      <span>{{ roleA.length > 0 ? '离开' : '设置' }}权限</span>-->
+<!--    </button>-->
+  </ng-template>
+</page-header>
+<nz-card>
+<!--  <sf mode="search" [schema]="searchSchema" (formSubmit)="st.reset($event)" (formReset)="st.reset($event)"></sf>-->
+  <st #st [data]="url" [columns]="columns" [res]="res" [req]="req"></st>
+</nz-card>

@@ -1,0 +1,53 @@
+<!--<div style="position: relative" id="home-box" >-->
+<!--  <div class="box-module left-box" style="width: 19%" ></div>-->
+<!--  <div style="width: 60%" class="box-module middle-box">-->
+<!--    -->
+<!--  </div>-->
+
+<!--  <div style="width: 19%" class="box-module right-box">右侧</div>-->
+<!--</div>-->
+<div nz-col class="gutter-row" [nzSpan]="24">
+  <div class="search-area-wrapper">
+    <div class="search-area container">
+      <h3 class="search-header">Have a Question?</h3>
+      <p class="search-tag-line">If you have any question you can ask below or enter what you are looking for!</p>
+
+      <form id="search-form" class="search-form clearfix" method="get" action="#" autocomplete="off">
+        <app-search-input class="search-term required" type="text" id="searchInput"
+                          (valueChange)="appSearchChange($event)"
+                          placeholder="Type your search terms here"
+                          title="* Please enter a search term!" style=""></app-search-input>
+        <input id="searchBtn" class="search-btn" type="button" (click)="search()" value="Search"/>
+        <div id="search-error-container"></div>
+
+      </form>
+    </div>
+  </div>
+</div>
+<div nz-row [nzGutter]="{ xs: 8, sm: 16, md: 24, lg: 32 }">
+
+
+  <div nz-col class="gutter-row" [nzSpan]="4" style="background-color: #f4f6f7;" >
+    <div class="inner-box" style="display: inline-block; width: 100%;text-align: center;">
+<!--      <nz-empty nzNotFoundContent="功能暂未开放敬请期待"></nz-empty>-->
+<!--      <button (click)="sanall()">排查未被索引文档</button>-->
+      <app-my-collects style="display: inline-block; width: 92%" #collectsComponent></app-my-collects>
+      <app-recomment-card style="display: inline-block; width: 92%"></app-recomment-card>
+    </div>
+  </div>
+  <div nz-col class="gutter-row" [nzSpan]="16">
+    <div class="inner-box">
+      <app-case-list #caseListComponent (onCollect)="onCollect($event)" ></app-case-list>
+    </div>
+  </div>
+<!--  <div nz-col class="gutter-row" [nzSpan]="4">-->
+<!--    <div class="inner-box">-->
+<!--&lt;!&ndash;      <app-recomment-card></app-recomment-card>&ndash;&gt;-->
+<!--      <app-recomment-card style="display: inline-block; width: 92%"></app-recomment-card>-->
+<!--&lt;!&ndash;      <nz-empty nzNotFoundContent="功能暂未开放敬请期待"></nz-empty>&ndash;&gt;-->
+<!--    </div>-->
+<!--  </div>-->
+  <!--  <div nz-col class="gutter-row" [nzSpan]="6"><div class="inner-box">col-6</div></div> -->
+  <router-outlet></router-outlet>
+</div>
+<!--<exception-trigger></exception-trigger>-->

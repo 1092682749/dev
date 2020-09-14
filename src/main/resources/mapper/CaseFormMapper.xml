@@ -1,0 +1,148 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.dyz.dev.dao.CaseFormMapper">
+  <resultMap id="BaseResultMap" type="com.dyz.dev.model.CaseForm">
+    <!--
+      WARNING - @mbg.generated
+    -->
+    <!--    <association property="upNum" select="">-->
+    <!--    </association>-->
+    <id column="CASE_ID" jdbcType="INTEGER" property="caseId"/>
+    <result column="TITLE" jdbcType="VARCHAR" property="title"/>
+    <result column="BRIEF" jdbcType="VARCHAR" property="brief"/>
+    <result column="CATEGORY_ID" jdbcType="VARCHAR" property="categoryId"/>
+    <result column="AUTHOR" jdbcType="VARCHAR" property="author"/>
+    <result column="CREATE_DATE" jdbcType="TIMESTAMP" property="createDate"/>
+    <result column="STATUS" jdbcType="VARCHAR" property="status"/>
+
+    <result column="UP_NUM" jdbcType="VARCHAR" property="upNum"/>
+    <result column="DOWN_NUM" jdbcType="VARCHAR" property="downNum"/>
+    <result column="COMMENTS_NUM" jdbcType="VARCHAR" property="commentsNum"/>
+    <result column="LIKEORUNLIKE" jdbcType="VARCHAR" property="likeOrUnlike"/>
+
+    <result column="TAGS" jdbcType="VARCHAR" property="tags"/>
+    <result column="CONTENT" jdbcType="BLOB" property="content"/>
+    <result column="CREATE_EMPLID" jdbcType="VARCHAR" property="createEmplid"/>
+    <result column="CREATE_EMPL" jdbcType="VARCHAR" property="createEmpl"/>
+    <result column="MODULE_NAME" jdbcType="VARCHAR" property="moduleName"/>
+    <result column="IS_DELETE" jdbcType="VARCHAR" property="isDelete"/>
+    <result column="ADMIN_RATE" jdbcType="VARCHAR" property="adminRate"/>
+  </resultMap>
+
+  <select id="findInfoById" resultMap="BaseResultMap">
+  select  c.*, nvl(up_num, 0) up_num, nvl(down_num, 0) down_num, nvl(comment_num, 0) COMMENTS_NUM, lit.likeOrUnlike LIKEORUNLIKE from
+     SOLVE_CENTER_TBL_CASE_FORM c left join
+     (
+     select
+     case_id,
+     sum(case action when 'like' then 1 else 0 end) as up_num,
+     sum(case action when 'unlike' then 1 else 0 end) as down_num
+
+     from SOLVE_CENTER_TBL_LIKE ut
+
+     group by ut.case_id
+     ) u on c.case_id = u.case_id
+     left join
+     (
+      select case_id, count(*) comment_num from solve_center_tbl_comment
+      where nvl(is_delete, 'N') != 'Y'
+      group by case_id
+     ) com
+     on c.case_id = com.case_id
+     left join (select  li.case_id, li.action   LIKEORUNLIKE from SOLVE_CENTER_TBL_LIKE li where li.action_empno = #{empno}) lit
+   on c.case_id = lit.case_id
+     where c.case_id = #{caseId} and nvl(c.is_delete, 'N') != 'Y'
+   </select>
+  <!--   and c.module_name = #{moduleName}-->
+  <sql id="baseQuery">
+    select  c.*, nvl(up_num, 0) up_num, nvl(down_num, 0) down_num, nvl(comment_num, 0) COMMENTS_NUM,  lit.LIKEORUNLIKE LIKEORUNLIKE from
+     SOLVE_CENTER_TBL_CASE_FORM c left join
+     (
+     select
+     case_id,
+     sum(case action when 'like' then 1 else 0 end) as up_num,
+     sum(case action when 'unlike' then 1 else 0 end) as down_num
+     from SOLVE_CENTER_TBL_LIKE ut
+
+     group by ut.case_id
+     ) u on c.case_id = u.case_id
+     left join
+     (
+      select case_id, count(*) comment_num from solve_center_tbl_comment
+      where nvl(is_delete, 'N') != 'Y'
+      group by case_id
+     ) com
+     on c.case_id = com.case_id
+     left join (select  li.case_id, li.action   LIKEORUNLIKE from SOLVE_CENTER_TBL_LIKE li where li.action_empno = #{empno}) lit
+    on c.case_id = lit.case_id
+  </sql>
+  <select id="findAllCaseInfo" resultMap="BaseResultMap">
+     select  c.*, nvl(up_num, 0) up_num, nvl(down_num, 0) down_num, nvl(comment_num, 0) COMMENTS_NUM,  lit.LIKEORUNLIKE LIKEORUNLIKE from
+     SOLVE_CENTER_TBL_CASE_FORM c
+     left join
+     (
+     select
+     case_id,
+     sum(case action when 'like' then 1 else 0 end) as up_num,
+     sum(case action when 'unlike' then 1 else 0 end) as down_num
+     from SOLVE_CENTER_TBL_LIKE ut
+
+     group by ut.case_id
+     ) u on c.case_id = u.case_id
+     left join
+     (
+      select case_id, count(*) comment_num from solve_center_tbl_comment
+    where nvl(is_delete, 'N') != 'Y'
+      group by case_id
+     ) com
+     on c.case_id = com.case_id
+     left join
+     (
+     select  li.case_id, li.action   LIKEORUNLIKE from SOLVE_CENTER_TBL_LIKE li where li.action_empno = #{empno}
+     ) lit
+    on c.case_id = lit.case_id
+    where
+    1 = 1 and nvl(c.is_delete, 'N') != 'Y'
+    <foreach collection="moduleName" item="item" separator="or " open="and (" close=")">c.module_name like '%' || #{item} || '%'</foreach>
+    order by c.CREATE_DATE desc
+  </select>
+  <!--
+    order by c.CREATE_DATE desc-->
+
+
+  <select id="findByIds" resultMap="BaseResultMap">
+    <include refid="baseQuery"></include>
+    <where>
+        nvl(c.is_delete, 'N') != 'Y'
+        and
+      c.case_id in
+      <foreach item="item" collection="idList" separator="," open=" (" close=")" index="index">
+        #{item, jdbcType=VARCHAR}
+      </foreach>
+      <foreach collection="moduleName" item="item" separator="or " open="and (" close=")">c.module_name like '%' || #{item} || '%'</foreach>
+    </where>
+    order by
+
+    <foreach collection="idList" item="item" separator="," open="DECODE(c.case_id, " close=")">
+      #{item}
+    </foreach>
+
+  </select>
+
+  <select id="Oldest" resultMap="BaseResultMap">
+    select * from (<include refid="baseQuery"></include>
+    <where>
+      <foreach collection="moduleName" item="item" separator="or " open="and (" close=")">c.module_name like '%' || #{item} || '%'</foreach>
+      and nvl(c.status, 'draft') != 'accept' and CATEGORY_ID = 'question'
+      and nvl(c.is_delete, 'N') != 'Y'
+    </where>
+    order by c.CREATE_DATE desc) tr  limit 10
+  </select>
+</mapper>
+
+
+  <!-- unique
+      <include refid="baseQuery"></include>
+      <where>
+        c.title like '%'|| #{condition} || '%' or t.content like '%' || #{condition} || '%' or t.brief like '%' || #{condition} || '%'
+      </where>-->

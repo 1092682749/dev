@@ -1,125 +1,100 @@
 package com.dyz.dev.configuration;
 
 import com.alibaba.druid.pool.DruidDataSource;
-
 import com.alibaba.druid.support.http.StatViewServlet;
-import org.apache.ibatis.session.SqlSessionFactory;
-import org.apache.ibatis.session.SqlSessionFactoryBuilder;
-import org.mybatis.spring.SqlSessionFactoryBean;
-import org.mybatis.spring.SqlSessionTemplate;
+
+
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Qualifier;
 import org.springframework.boot.context.properties.ConfigurationProperties;
 import org.springframework.boot.web.servlet.ServletRegistrationBean;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
-import org.springframework.context.annotation.Primary;
-import org.springframework.core.io.support.PathMatchingResourcePatternResolver;
-import org.springframework.transaction.annotation.EnableTransactionManagement;
-import tk.mybatis.spring.annotation.MapperScan;
-import tk.mybatis.spring.mapper.MapperScannerConfigurer;
+import org.springframework.jdbc.core.JdbcTemplate;
 
-import javax.annotation.Resource;
 import javax.sql.DataSource;
-import java.io.IOException;
 import java.util.HashMap;
+import java.util.Locale;
 import java.util.Map;
+import java.util.Properties;
 
+/**
+ * 单数据源配置，多数据源请参考ONB系统
+ */
 @Configuration
-@EnableTransactionManagement
-
+@ConfigurationProperties(prefix = "database")
 public class DBConfig {
 
-    @Bean("druidServlet")
+    String url;
 
-    public ServletRegistrationBean druidServlet() {
-        ServletRegistrationBean servletRegistrationBean = new ServletRegistrationBean();
-        servletRegistrationBean.setServlet(new StatViewServlet());
-        servletRegistrationBean.addUrlMappings("/druid/*");
-        Map<String, String> initParameters = new HashMap<String, String>();
-        // initParameters.put("loginUsername", "druid");// 用户名
-        // initParameters.put("loginPassword", "druid");// 密码
-        initParameters.put("resetEnable", "false");// 禁用HTML页面上的“Reset All”功能
-//        initParameters.put("allow", "127.0.0.1"); // IP白名单 (没有配置或者为空，则允许所有访问)
-        // initParameters.put("deny", "192.168.20.38");// IP黑名单
-        // (存在共同时，deny优先于allow)
-        servletRegistrationBean.setInitParameters(initParameters);
-        return servletRegistrationBean;
-    }
-    /**
-     * 第一个数据源配置
-     * @return
-     */
-    @Bean("oneDataSource")
-    @ConfigurationProperties("db.properties.one")
-    @Primary
-    public DataSource setOneDataSource() {
+    String password;
+
+    String username;
+
+    String driverClassName;
+
+
+    @Bean("mainDruid")
+    public DataSource mainDruid() {
         DruidDataSource dataSource = new DruidDataSource();
-        //dataSource.setUrl("");
+        dataSource.setUsername(username);
+        dataSource.setPassword(password);
+        dataSource.setDriverClassName(driverClassName);
+        dataSource.setUrl(url);
         return dataSource;
     }
 
-    @Bean("oneSqlSessionFactory")
-    @Primary
-    public SqlSessionFactory oneSqlSessionFactory(@Qualifier("oneDataSource") DataSource dataSource) throws Exception {
-        SqlSessionFactoryBean sqlSessionFactory = new SqlSessionFactoryBean();
-        sqlSessionFactory.setDataSource(dataSource);
-        sqlSessionFactory.setMapperLocations(new PathMatchingResourcePatternResolver().getResources("classpath:oneMapper/*.xml"));
-        return sqlSessionFactory.getObject();
+    @Bean(name = "jdbcTemplate")
+    public JdbcTemplate jdbcTemplate(@Qualifier("mainDruid") DataSource dataSource) {
+        JdbcTemplate jdbc = new JdbcTemplate(dataSource);
+        System.out.println("******** JdbcTemplate************" + jdbc);
+//        Map<String, Object> map = jdbc.queryForMap("select * from user_users");
+//        System.out.println(map);
+        return jdbc;
     }
 
 
-    @Bean("oneSqlSessionTemplate")
-    @Primary
-    public SqlSessionTemplate oneSqlSessionTemplate(@Qualifier("oneSqlSessionFactory") SqlSessionFactory  sqlSessionFactory) {
-        SqlSessionTemplate sqlSessionTemplate = new SqlSessionTemplate(sqlSessionFactory);
-        return sqlSessionTemplate;
-    }
-
-    @Bean("oneMapperSacn")
-    @Primary
-    public MapperScannerConfigurer oneMapperSacn() {
-        MapperScannerConfigurer configurer = new MapperScannerConfigurer();
-        configurer.setBasePackage("com.dyz.dev.oneDao");
-        configurer.setSqlSessionFactoryBeanName("oneSqlSessionFactory");
-        return configurer;
+    @Bean
+    public ServletRegistrationBean statViewServlet() {
+        ServletRegistrationBean bean = new ServletRegistrationBean(new StatViewServlet(), "/druid/*");
+        Map<String, String> initParams = new HashMap<>();
+        initParams.put("loginUsername", "admin");
+        initParams.put("loginPassword", "123456");
+        initParams.put("allow", "");// 默认就是允许所有访问
+        bean.setInitParameters(initParams);
+        return bean;
     }
 
 
-    /////////////////////////////////
-
-    /**
-     * 第二个数据源配置
-     * @return
-     */
-    @Bean("towDataSource")
-    @ConfigurationProperties("db.properties.tow")
-    public DataSource setTowDataSource() {
-        DruidDataSource dataSource = new DruidDataSource();
-        dataSource.setUrl("jdbc:mysql://119.29.4.88:3306/testredis?useUnicode=true&characterEncoding=utf-8");
-        return dataSource;
+    public String getUrl() {
+        return url;
     }
 
-    @Bean("towSqlSessionFactory")
-    public SqlSessionFactory towSqlSessionFactory(@Qualifier("towDataSource") DataSource dataSource) throws Exception {
-        SqlSessionFactoryBean sqlSessionFactory = new SqlSessionFactoryBean();
-        sqlSessionFactory.setDataSource(dataSource);
-        sqlSessionFactory.setMapperLocations(new PathMatchingResourcePatternResolver().getResources("classpath:towMapper/*.xml"));
-        return sqlSessionFactory.getObject();
+    public void setUrl(String url) {
+        this.url = url;
     }
 
-
-    @Bean("towSqlSessionTemplate")
-    public SqlSessionTemplate towSqlSessionTemplate(@Qualifier("towSqlSessionFactory") SqlSessionFactory  sqlSessionFactory) {
-        SqlSessionTemplate sqlSessionTemplate = new SqlSessionTemplate(sqlSessionFactory);
-        return sqlSessionTemplate;
+    public String getPassword() {
+        return password;
     }
 
-    @Bean("towMapperSacn")
-    public MapperScannerConfigurer towMapperSacn() {
-        MapperScannerConfigurer configurer = new MapperScannerConfigurer();
-        configurer.setBasePackage("com.dyz.dev.towDao");
-        configurer.setSqlSessionFactoryBeanName("towSqlSessionFactory");
-        return configurer;
+    public void setPassword(String password) {
+        this.password = password;
+    }
+
+    public String getUsername() {
+        return username;
+    }
+
+    public void setUsername(String username) {
+        this.username = username;
+    }
+
+    public String getDriverClassName() {
+        return driverClassName;
+    }
+
+    public void setDriverClassName(String driverClassName) {
+        this.driverClassName = driverClassName;
     }
 }

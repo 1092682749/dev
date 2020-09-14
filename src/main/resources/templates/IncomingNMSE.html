@@ -1,0 +1,848 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.w3.org/1999/xhtml" th:with="unixstamp=${#dates.createNow().time}">
+<head>
+    <meta charset="UTF-8">
+    <title>IncomingNMSE</title>
+    <!-- Tell the browser to be responsive to screen width -->
+    <meta content="width=device-width, initial-scale=1, maximum-scale=1, user-scalable=no" name="viewport">
+    <!--    <link rel="shortcut icon" type="image/x-icon" th:href="@{/static/hlg/dist/img/favicon.ico}">-->
+    <!--引入JQuery-->
+    <link th:href="@{/static/css/jquery-ui.css}" rel="stylesheet" type="text/css"/>
+    <!-- Bootstrap 3.3.6 -->
+    <link rel="stylesheet" th:href="@{/static/hlg/plugins/bootstrap/css/bootstrap.min.css}">
+    <link th:href="@{/static/css/bootstrap-table.css}" rel="stylesheet" type="text/css"/>
+    <link th:href="@{/static/bootstrap/css/bootstrap-tagsinput.css}" rel="stylesheet" type="text/css"/>
+    <link rel="stylesheet" th:href="@{/static/fileinput/css/fileinput.css}">
+    <link rel="stylesheet" th:href="@{/static/fontawesome-free-5.12.0-web/css/all.css}">
+    <link rel="stylesheet" th:href="@{/static/fileinput/themes/explorer-fas/theme.css}">
+    <!--引入Incoming样式-->
+    <link th:href="@{/static/css/IncomingCSS.css}" rel="stylesheet" type="text/css"/>
+    <!-- Font Awesome -->
+    <link rel="stylesheet" th:href="@{/static/hlg/dist/css/font-awesome.min.css}">
+    <!-- Ionicons -->
+    <link rel="stylesheet" th:href="@{/static/hlg/dist/css/ionicons.min.css}">
+    <!-- jvectormap -->
+    <link rel="stylesheet" th:href="@{/static/hlg/plugins/jvectormap/jquery-jvectormap-1.2.2.css}">
+    <!-- Theme style -->
+    <link rel="stylesheet" th:href="@{/static/hlg/dist/css/AdminLTE.min.css}">
+    <!-- AdminLTE Skins. Choose a skin from the css/skins
+         folder instead of downloading all of them to reduce the load. -->
+    <link rel="stylesheet" th:href="@{/static/hlg/dist/css/skins/_all-skins.min.css}">
+    <!--    layui-->
+    <link rel="stylesheet" th:href="@{/static/layui/css/layui.css}">
+    <link rel="stylesheet" th:href="@{/static/iviewui/dist/styles/iview.css}">
+    <style>
+        .bg-info {
+            background-color: #5bc0de;
+        }
+
+        .arrow-down {
+            border: solid #0a0a0a 10px;
+            width: 0;
+            height: 0;
+            border-bottom: solid transparent 10px;
+            border-left: solid transparent 10px;
+            border-right: solid transparent 10px;
+            background-color: transparent;
+        }
+
+        #boxs input {
+            margin: 10px;
+        }
+
+        .sys-name {
+            margin-left: 10px;
+            color: #acb4c1;
+            font-size: 26px;
+            font-family: 微软雅黑, "ms song", 宋体, Arial, verdana, Helvetica, sans-serif;
+        }
+
+        .layout {
+            border: 1px solid #d7dde4;
+            background: #f5f7f9;
+            position: relative;
+            border-radius: 4px;
+            overflow: hidden;
+        }
+
+        .layout-logo {
+            /*width: 100px;*/
+            height: 50px;
+            /* background: #5b6270; */
+            border-radius: 3px;
+            float: left;
+            position: relative;
+            /* top: 15px; */
+            left: 20px;
+        }
+
+        .layout-nav {
+            width: 255px;
+            margin: 0 auto;
+            margin-right: 20px;
+        }
+
+        .footButton {
+            margin-left: 20px;
+        }
+
+        .row {
+            margin-bottom: 10px;
+        }
+
+        .layui-colla-title {
+            height: 55px;
+            line-height: 55px;
+            color: #49a9ee;
+            background-color: #ffffff;
+            font-weight: 600;
+            font-size: 23px;
+        }
+
+
+        .layui-input-block input {
+            margin-bottom: 10px;
+        }
+
+        .checkbox-box input {
+            zoom: 180%;
+        }
+
+        .checkbox-box {
+            vertical-align: middle;
+        }
+
+        .table-bordered > tbody > tr > td {
+            border-color: #c8cbcc;
+            vertical-align: middle;
+            max-width: 287px;
+            word-break: break-word;
+        }
+
+        .table-bordered > thead > tr > th {
+            border-color: #c8cbcc;
+            text-align: center;
+            color: white;
+            background-color: #00c0ef;
+        }
+    </style>
+
+</head>
+<body>
+<input th:value="${employee}" id="employeeInput" hidden/>
+<input th:value="${supplierForm}" id="supplierFormInput" hidden/>
+<div class="wrapper" id="app">
+
+    <div class="layout" style="height: 100vh">
+        <Layout style="height: 100vh">
+            <i-header :style="{padding: 0}" class="layout-header-bar"
+                      th:include="index-iview :: header"
+                      style="background: -webkit-gradient(linear, 0% 100%, 0% 0%, from(rgb(0, 0, 0)), to(rgb(71, 71, 71)));height: 52px;line-height: 52px;"
+            ></i-header>
+
+            <Layout style="height: 10px">
+                <Sider hide-trigger :style="{background: '#fff'}"
+                       th:include="index-iview :: aside"></Sider>
+                <i-content :style="{padding: '24px', minHeight: '280px', background: '#f3f3f3'}" style="overflow: auto">
+                    <div style="width:100%">
+                        <div style="width:99%;margin:auto;">
+
+                            <!-- Content Header (Page header) -->
+
+                            <!-- Main content -->
+                            <!--        <section class="layui-container">-->
+                            <div class="layui-row"
+                                 style="text-align: center; font-weight: 500; font-family: -webkit-pictograph; color:#0070c0;">
+                                <div style="padding-top:10px;"><h2>New material/Supplier evaluation</h2></div>
+                            </div>
+                            <div style="height:0px;width:100%;border:2px solid #0070c0;margin-top:10px;"></div>
+                            <!--            面板 start-->
+                            <div id="NMSE_STATUS">
+                                <div class="row">
+                                    <div class="col-md-12 col-lg-12">
+                                        <table class="table table-bordered">
+                                            <tr style="text-align: center">
+                                                <th style="text-align: center" class="bg-info col-lg-2 col-md-2">当前申请人
+                                                    :
+                                                </th>
+                                                <td class="col-lg-2 col-md-2">
+                                                    <div>{{applyUser}}</div>
+                                                </td>
+                                                <th style="text-align: center" class="bg-info col-lg-2 col-md-2">部门 :
+                                                </th>
+                                                <td class="col-lg-2 col-md-2">
+                                                    <div>{{applyEmpDept}}</div>
+                                                </td>
+                                                <th style="text-align: center" class="bg-info col-lg-2 col-md-2">时间 :
+                                                </th>
+                                                <td class="col-lg-2 col-md-2">
+                                                    <div id="AppFormTime"></div>
+                                                </td>
+                                            </tr>
+                                            <tr style="text-align: center">
+                                                <th style="text-align: center" class="bg-info col-lg-2 col-md-2">Status
+                                                    :
+                                                </th>
+                                                <td class="col-lg-2 col-md-2">
+                                                    <div id="Div1">{{statusText}}</div>
+                                                </td>
+                                                <th style="text-align: center" class="bg-info col-lg-2 col-md-2">Current
+                                                    Processor
+                                                    :
+                                                </th>
+                                                <td class="col-lg-2 col-md-2">
+                                                    <div id="Div2">{{nextProcess == undefined ? '' : nextProcess}}</div>
+                                                </td>
+                                                <th style="text-align: center" class="bg-info col-lg-2 col-md-2">Form No
+                                                    :
+                                                </th>
+                                                <td class="col-lg-2 col-md-2">
+                                                    <div id="Div3" v-if="showFormNo">{{formNo}}</div>
+                                                </td>
+                                            </tr>
+                                        </table>
+                                    </div>
+                                </div>
+                            </div>
+
+                            <div style="margin-top: 10px">
+                                <div class="layui-collapse">
+                                    <div class="layui-colla-item" id="baseInfo">
+                                        <h2 class="layui-colla-title" style="background-color: powderblue;">
+                                            基本资料（申请人填写）</h2>
+                                        <div class="layui-colla-content layui-show">
+
+                                            <div class="panel panel-info">
+                                                <div class="panel-body">
+
+                                                    <div class="row">
+                                                        <div class="form-group col-md-3">
+                                                            <div class="input-group">
+                                                                <div class="input-group-addon">申请者</div>
+                                                                <input id="ApplicantInput"
+                                                                       class="form-control col-md-10"
+                                                                       type="text" placeholder="自动生成"
+                                                                       v-model="applyUser"/>
+                                                            </div>
+                                                        </div>
+                                                        <div class="form-group col-md-3">
+                                                            <div class="input-group">
+                                                                <div class="input-group-addon">申请者电话</div>
+                                                                <input id="AppPhoneInput" class="form-control col-md-10"
+                                                                       type="text"
+                                                                       placeholder="自动生成" v-model="applyPhone"/>
+
+                                                            </div>
+                                                        </div>
+                                                        <div class="form-group col-md-3">
+                                                            <div class="input-group">
+                                                                <div class="input-group-addon">厂别</div>
+                                                                <input id="SiteInput" class="form-control col-md-10"
+                                                                       type="text"
+                                                                       placeholder="自动生成" v-model="site"/>
+                                                            </div>
+                                                        </div>
+                                                        <div class="form-group col-md-3">
+                                                            <div class="input-group">
+                                                                <div class="input-group-addon"><span
+                                                                        class="redStar">*</span>申请日
+                                                                </div>
+                                                                <input id="AppDateInput" class="form-control col-md-10"
+                                                                       type="text"
+                                                                       readonly v-model="applyDate"/>
+                                                            </div>
+                                                        </div>
+                                                    </div>
+
+                                                    <div class="row">
+                                                        <div class="form-group col-md-3">
+                                                            <div class="input-group">
+                                                                <div class="input-group-addon"><span
+                                                                        class="redStar">*</span>材料类别
+                                                                </div>
+                                                                <select class="form-control col-md-10" id="MatTypeInput"
+                                                                        v-model="materialClassify">
+                                                                    <option value="">请选择</option>
+                                                                    <option value="V_Wafer">V_Wafer</option>
+                                                                    <option value="L0_Gas">L0_Gas</option>
+                                                                    <option value="L1_Chemical">L1_Chemical</option>
+                                                                    <option value="L2_PR">L2_PR</option>
+                                                                    <option value="L3_Quartz">L3_Quartz</option>
+                                                                    <option value="L4_手套">L4_手套</option>
+                                                                    <option value="L5_Paking material">L5_Paking
+                                                                        material
+                                                                    </option>
+                                                                    <option value="L8_Pad/Disk">L8_Pad/Disk</option>
+                                                                    <option value="L9_Target">L9_Target</option>
+                                                                </select>
+                                                            </div>
+                                                        </div>
+                                                        <div class="form-group col-md-3">
+                                                            <div class="input-group">
+                                                                <div class="input-group-addon"><span
+                                                                        class="redStar">*</span>新物料说明
+                                                                </div>
+                                                                <input id="MaterialNoInput"
+                                                                       class="form-control col-md-10"
+                                                                       type="text" v-model="newMaterialRemark"/>
+                                                            </div>
+                                                        </div>
+                                                        <div class="form-group col-md-3">
+                                                            <div class="input-group">
+                                                                <div class="input-group-addon">厂商采购人员</div>
+                                                                <input id="VendorInput" class="form-control col-md-10"
+                                                                       type="text"
+                                                                       v-model="vendorPurchaseUser"/>
+                                                            </div>
+                                                        </div>
+                                                        <div class="form-group col-md-3">
+                                                            <div class="input-group">
+                                                                <div class="input-group-addon">厂商采购人员联系电话</div>
+                                                                <input id="VendorPhoneInput"
+                                                                       class="form-control col-md-10"
+                                                                       type="text" v-model="vendorPurchasePhone"/>
+
+                                                            </div>
+                                                        </div>
+                                                    </div>
+
+                                                    <div class="row">
+                                                        <div class="form-group col-md-3">
+                                                            <div class="input-group">
+                                                                <div class="input-group-addon">目前合格代理商</div>
+                                                                <input id="VendorPartNoInput"
+                                                                       class="form-control col-md-10"
+                                                                       type="text" v-model="quailifiedVendor"/>
+                                                            </div>
+                                                        </div>
+                                                        <div class="form-group col-md-3">
+                                                            <div class="input-group">
+                                                                <div class="input-group-addon"><span
+                                                                        class="redStar">*</span>新物料编号
+                                                                </div>
+                                                                <input id="NewPartNoInput"
+                                                                       class="form-control col-md-10"
+                                                                       type="text" v-model="materialNo"/>
+                                                            </div>
+                                                        </div>
+                                                        <div class="form-group col-md-3">
+                                                            <div class="input-group">
+                                                                <div class="input-group-addon"><span
+                                                                        class="redStar">*</span>新物料厂商代码
+                                                                </div>
+                                                                <input id="VendorCodeInput"
+                                                                       class="form-control col-md-10"
+                                                                       type="text" v-model="vendorCode"/>
+
+                                                            </div>
+                                                        </div>
+                                                        <div class="form-group col-md-3">
+                                                            <div class="input-group">
+                                                                <div class="input-group-addon"><span
+                                                                        class="redStar">*</span>评估范畴
+                                                                </div>
+                                                                <select class="form-control col-md-10" id="ScopeInput"
+                                                                        v-model="evaluationRange">
+                                                                    <option value="">请选择</option>
+                                                                    <option value="New supplier">New supplier</option>
+                                                                    <option value="New material">New material</option>
+                                                                    <option value="Both new">Both new</option>
+                                                                </select>
+                                                            </div>
+                                                        </div>
+                                                    </div>
+
+
+                                                    <div class="row">
+                                                        <div class="form-group col-md-3">
+                                                            <div class="input-group">
+                                                                <div class="input-group-addon"><span
+                                                                        class="redStar">*</span>评估原因
+                                                                </div>
+                                                                <input id="ReasonInput" class="form-control col-md-10"
+                                                                       type="text"
+                                                                       v-model="evaluationReason"/>
+                                                            </div>
+                                                        </div>
+                                                        <div class="form-group col-md-3">
+                                                            <div class="input-group">
+                                                                <div class="input-group-addon"><span
+                                                                        class="redStar">*</span>是否需要通知FCCB
+                                                                </div>
+                                                                <select class="form-control col-md-10"
+                                                                        id="FCCBCheckInput"
+                                                                        name="FCCBCheck" v-model="notifyFccb">
+                                                                    <option value="">请选择</option>
+                                                                    <option value="Y">Y</option>
+                                                                    <option value="N">N</option>
+                                                                </select>
+                                                            </div>
+                                                        </div>
+                                                        <div class="form-group col-md-3" v-if="showFCCBNO">
+                                                            <div class="input-group">
+                                                                <div class="input-group-addon">FCCB No.</div>
+                                                                <input id="FCCBNoInput" class="form-control col-md-10"
+                                                                       type="text"
+                                                                       placeholder="如前面选'Y',此项必填" v-model="fccbNo"/>
+                                                            </div>
+                                                        </div>
+                                                        <div class="form-group col-md-3">
+                                                            <div class="input-group">
+                                                                <div class="input-group-addon">制程应用
+                                                                </div>
+                                                                <input id="ProcessDesInput"
+                                                                       class="form-control col-md-10"
+                                                                       type="text" v-model="processApplication"/>
+                                                            </div>
+                                                        </div>
+                                                    </div>
+
+                                                    <div class="row">
+                                                        <!-- <div class="form-group col-md-4">
+                                                            <div class="input-group">
+                                                                <div class="input-group-addon"><span id="redStar">*</span>tsmc产品规格</div>
+                                                                <input id="TSMCStandard" class="form-control col-md-10" type="text" placeholder="此项需添加文件（5M以内）"/>
+
+                                                            </div>
+                                                        </div> -->
+                                                        <div class="form-group col-md-6">
+                                                            <div v-if="showFileList('tsmctandardFiles')">
+                                                                <div>tsmc产品规格列表：</div>
+                                                                <br>
+
+                                                                <div style="border: 1px solid; height: 50px; line-height: 50px"
+                                                                     class="row"
+                                                                     v-for="(item, index) in tsmctandardFiles"
+                                                                     :key="index">
+                                                                    <div class="col-md-9">
+                                                                        <a target="_blank"
+                                                                           v-bind:href="item.downloadUrl">{{item.fileName}}点击下载</a>
+                                                                    </div>
+                                                                    <button class="btn btn-danger" v-if="showUpload"
+                                                                            v-on:click="deleteFile(item.fileFid, index, 'tsmctandardFiles')">
+                                                                        删除
+                                                                    </button>
+                                                                </div>
+                                                            </div>
+                                                            <div class="input-group" v-if="showUpload">
+                                                                <div class="input-group-addon"><span
+                                                                        class="redStar">*</span>tsmc产品规格
+                                                                </div>
+                                                                <input id="TSMCStandard" name="file" type="file"
+                                                                       multiple
+                                                                       class="file-loading" data-show-caption="true">
+                                                            </div>
+                                                        </div>
+                                                        <div class="form-group col-md-6">
+                                                            <div v-if="showFileList('qsystemFiles')">
+                                                                <div>品质系统列表：</div>
+                                                                <br>
+
+                                                                <div style="border: 1px solid; height: 50px; line-height: 50px"
+                                                                     class="row"
+                                                                     v-for="(item, index) in qsystemFiles" :key="index">
+                                                                    <div class="col-md-9">
+                                                                        <a target="_blank"
+                                                                           v-bind:href="item.downloadUrl">{{item.fileName}}点击下载</a>
+                                                                    </div>
+                                                                    <button class="btn btn-danger" v-if="showUpload"
+                                                                            v-on:click="deleteFile(item.fileFid, index, 'qsystemFiles')">
+                                                                        删除
+                                                                    </button>
+                                                                </div>
+                                                            </div>
+                                                            <div class="input-group" v-if="showUpload">
+                                                                <div class="input-group-addon"><span
+                                                                        class="redStar">*</span>品质系统
+                                                                </div>
+                                                                <input id="Qsystem" name="file" type="file" multiple
+                                                                       class="file-loading" data-show-caption="true">
+                                                                <!-- <input id="Qsystem" class="form-control col-md-10" type="text" placeholder="此项需添加文件（5M以内）"/> -->
+                                                            </div>
+                                                        </div>
+                                                    </div>
+
+
+                                                    <div class="row">
+                                                        <div class="form-group col-md-6">
+                                                            <div v-if="showFileList('inquireFormFiles')">
+                                                                <div>绿色采购问卷列表：</div>
+                                                                <br>
+
+                                                                <div style="border: 1px solid; height: 50px; line-height: 50px"
+                                                                     class="row"
+                                                                     v-for="(item, index) in inquireFormFiles"
+                                                                     :key="index">
+                                                                    <div class="col-md-9">
+                                                                        <a target="_blank"
+                                                                           v-bind:href="item.downloadUrl">{{item.fileName}}点击下载</a>
+                                                                    </div>
+                                                                    <button class="btn btn-danger" v-if="showUpload"
+                                                                            v-on:click="deleteFile(item.fileFid, index, 'inquireFormFiles')">
+                                                                        删除
+                                                                    </button>
+                                                                </div>
+                                                            </div>
+                                                            <div v-if="showUpload" class="input-group">
+                                                                <div class="input-group-addon"><span
+                                                                        class="redStar">*</span>绿色采购问卷
+                                                                </div>
+                                                                <input id="InquireForm" name="file" type="file" multiple
+                                                                       class="file-loading" data-show-caption="true">
+                                                                <!-- <input id="InquireForm" class="form-control col-md-10" type="text" placeholder="此项需添加文件（5M以内）"/> -->
+                                                            </div>
+                                                        </div>
+
+                                                        <div class="form-group col-md-6">
+                                                            <div v-if="showFileList('safetyFormFiles')">
+                                                                <div>物料安全表附件列表：</div>
+                                                                <br>
+
+                                                                <div style="border: 1px solid; height: 50px; line-height: 50px"
+                                                                     class="row"
+                                                                     v-for="(item, index) in safetyFormFiles"
+                                                                     :key="index">
+                                                                    <div class="col-md-9">
+                                                                        <a target="_blank"
+                                                                           v-bind:href="item.downloadUrl">{{item.fileName}}点击下载</a>
+                                                                    </div>
+                                                                    <button class="btn btn-danger" v-if="showUpload"
+                                                                            v-on:click="deleteFile(item.fileFid, index, 'safetyFormFiles')">
+                                                                        删除
+                                                                    </button>
+                                                                </div>
+                                                            </div>
+                                                            <div class="input-group" v-if="showUpload">
+                                                                <div class="input-group-addon"><span
+                                                                        class="redStar">*</span>物料安全表
+                                                                </div>
+                                                                <!-- <input id="SafetyForm" class="form-control col-md-10" type="text" placeholder="此项需添加文件（5M以内）"/> -->
+                                                                <input id="SafetyForm" name="file" type="file" multiple
+                                                                       class="file-loading" data-show-caption="true">
+                                                            </div>
+                                                        </div>
+                                                    </div>
+
+
+                                                </div>
+                                            </div>
+                                        </div>
+
+                                    </div>
+                                </div>
+
+
+                            </div><!-- margin-top -->
+
+
+                            <div style="margin-top: 10px" v-if="showSQMConfirm">
+                                <div class="layui-collapse" id="SQMConfirm">
+                                    <div class="layui-colla-item">
+                                        <h2 class="layui-colla-title" style="background-color: powderblue;">
+                                            供应商同意书（SQM填写）</h2>
+                                        <div class="layui-colla-content layui-show">
+
+                                            <div class="panel panel-info">
+                                                <div class="panel-body">
+                                                    <div v-if="showFileList('nmsereportFiles')">
+                                                        <div>同意书列表：</div>
+                                                        <br>
+
+                                                        <div style="border: 1px solid; height: 50px; line-height: 50px"
+                                                             class="row"
+                                                             v-for="(item, index) in nmsereportFiles" :key="index">
+                                                            <div class="col-md-9">
+                                                                <a target="_blank"
+                                                                   v-bind:href="item.downloadUrl">{{item.fileName}}点击下载</a>
+                                                            </div>
+                                                            <button class="btn btn-danger" v-if="showNMSEReportUpload"
+                                                                    v-on:click="deleteFile(item.fileFid, index, 'nmsereportFiles')">
+                                                                删除
+                                                            </button>
+                                                        </div>
+                                                    </div>
+                                                    <div class="row">
+                                                        <div class="form-group col-md-12">
+                                                            <div v-if="showNMSEReportUpload" class="input-group">
+                                                                <div class="input-group-addon">NMSE Supplier同意书</div>
+                                                                <!-- <input id="" class="form-control col-md-10" type="text" placeholder="此项需添加文件（5M以内）"/> -->
+                                                                <input id="NMSEReport" name="file" type="file" multiple
+                                                                       class="file-loading" data-show-caption="true">
+                                                            </div>
+                                                        </div>
+                                                    </div>
+
+                                                </div>
+                                            </div>
+                                        </div>
+
+                                    </div>
+                                </div><!-- 基本资料 -->
+
+
+                            </div><!-- margin-top -->
+
+
+                            <div style="margin-top: 10px" v-if="showAppConfirm">
+                                <div class="layui-collapse" id="AppConfirm">
+                                    <div class="layui-colla-item">
+                                        <h2 class="layui-colla-title" style="background-color: powderblue;">
+                                            评估资料（申请者填写）</h2>
+                                        <div class="layui-colla-content layui-show">
+
+                                            <div class="panel panel-info">
+                                                <div class="panel-body">
+
+                                                    <div v-if="showFileList('ReportOneFiles')">
+                                                        <div>评估报告列表：</div>
+                                                        <br>
+
+                                                        <div style="border: 1px solid; height: 50px; line-height: 50px"
+                                                             class="row"
+                                                             v-for="(item, index) in ReportOneFiles" :key="index">
+                                                            <div class="col-md-9">
+                                                                <a target="_blank"
+                                                                   v-bind:href="item.downloadUrl">{{item.fileName}}点击下载</a>
+                                                            </div>
+                                                            <button class="btn btn-danger" v-if="showReportUpload"
+                                                                    v-on:click="deleteFile(item.fileFid, index, 'ReportOneFiles')">
+                                                                删除
+                                                            </button>
+                                                        </div>
+                                                    </div>
+
+                                                    <div class="row">
+                                                        <div class="form-group col-md-12">
+                                                            <div v-if="showReportUpload" class="input-group">
+                                                                <div class="input-group-addon">评估报告</div>
+                                                                <!-- <input id="" class="form-control col-md-10" type="text" placeholder="此项需添加文件（5M以内）"/> -->
+                                                                <input id="Report_1" name="file" type="file" multiple
+                                                                       class="file-loading" data-show-caption="true">
+                                                            </div>
+                                                        </div>
+                                                    </div>
+
+                                                </div>
+                                            </div>
+                                        </div>
+
+                                    </div>
+                                </div><!-- 基本资料 -->
+
+
+                            </div><!-- margin-top -->
+
+
+                            <div style="margin-top: 10px" v-if="showSQMToConfirm">
+                                <div class="layui-collapse" id="SQMToConfirm">
+                                    <div class="layui-colla-item">
+                                        <h2 class="layui-colla-title" style="background-color: powderblue;">
+                                            Spec（SQM填写）</h2>
+                                        <div class="layui-colla-content layui-show">
+
+                                            <div class="panel panel-info">
+                                                <div class="panel-body">
+                                                    <div class="row">
+                                                        <div class="form-group col-md-12">
+                                                            <div class="input-group">
+                                                                <div class="input-group-addon">tsmc产品规格号码以及ECCP/DCN
+                                                                    Number
+                                                                </div>
+                                                                <input id="dcnNumberInput"
+                                                                       class="form-control col-md-10"
+                                                                       type="text" v-model="dcnNumber"/>
+                                                            </div>
+                                                        </div>
+                                                    </div>
+
+                                                </div>
+                                            </div>
+                                        </div>
+
+                                    </div>
+                                </div><!-- 基本资料 -->
+
+
+                            </div><!-- margin-top -->
+
+                            <div class="row" v-if="showSQMList">
+
+                                <div class="col-md-4">
+                                    <div class="input-group input-group-md">
+            <span id="sizing-addonon18" class="input-group-addon">
+            <span style="color: red">*</span>SQM工程师
+            </span>
+                                        <input type="text" placeholder="请选择SQM工程师" aria-describedby="sizing-addonon18"
+                                               disabled="disabled" class="form-control not-null" id="SQMEngineerInput">
+                                        <!-- v-model ="SQMEngineer" -->
+                                    </div>
+                                </div>
+
+                                <div class="col-md-2">
+                                    <button type="button" class="btn btn-md btn-info" data-toggle="modal"
+                                            data-target="#SQMModal">
+                                        选择
+                                    </button>
+                                </div>
+
+                            </div>
+                            <div class="row" v-if="showPurchaseUser">
+                                <div class="form-group col-md-9">
+                                    <div class="input-group">
+                                        <div class="input-group-addon">指定处理人</div>
+                                        <input id="purchaseUserInput" class="form-control col-md-10" type="text"
+                                               v-model="purchaseUser" disabled/>
+                                    </div>
+                                </div>
+                                <div class="col-md-2">
+                                    <button class="btn btn-info" v-on:click="SelectPurchaseUser">选择</button>
+                                </div>
+                            </div>
+                            <div class="row" v-if="showIsepUser">
+                                <div class="form-group col-md-9">
+                                    <div class="input-group">
+                                        <div class="input-group-addon">指定处理人</div>
+                                        <input id="isepUserInput" class="form-control col-md-10" type="text"
+                                               v-model="isepUser" disabled/>
+                                    </div>
+                                </div>
+                                <div class="col-md-2">
+                                    <button class="btn btn-info" v-on:click="SelectIsepUser">选择</button>
+                                </div>
+                            </div>
+                        </div>
+
+
+                        <!--    ——————————————————————————————————————modals——————————————————————————————————————  -->
+                        <!-- 模态框（Modal） -->
+                        <form>
+                            <div class="modal fade" id="SQMModal" tabindex="-1" role="dialog"
+                                 aria-labelledby="myModalLabel">
+                                <div class="modal-dialog modal-lg" role="document">
+                                    <div class="modal-content">
+                                        <div class="modal-header">
+                                            <button type="button" class="close" data-dismiss="modal" aria-hidden="true">
+                                                &times;
+                                            </button>
+                                            <h3 class="modal-title" id="myModalLabel">SQM工程师信息</h3>
+                                        </div>
+                                        <div class="modal-body">
+                                            <table class="table" id="SQMList"></table>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                        </form>
+                        <Modal v-model="PurchaseUserVisible" title="Welcome">
+                            <table class="table" id="PurchaseUserList"></table>
+                        </Modal>
+                        <Modal v-model="IsepUserVisible" title="Welcome">
+                            <table class="table" id="IsepUserList"></table>
+                        </Modal>
+                        <!--    ——————————————————————————————————————modals——————————————————————————————————————  -->
+
+
+                        <div style="margin-top: 10px">
+                            <div class="layui-collapse" id="ProcessLog" v-if="showProcessLog">
+                                <!--                processLog-->
+                                <div class="layui-colla-item">
+                                    <h2 class="layui-colla-title" style="background-color: powderblue;">签核记录</h2>
+                                    <div class="layui-colla-content layui-show">
+
+                                        <div class="panel panel-info">
+                                            <div class="panel-body">
+                                                <table id="processLogTable"></table>
+                                            </div>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                        </div><!-- margin-top -->
+
+                        <div class="container">
+                            <div class="row" style="text-align: center" v-if="showButtonBar">
+                <span class="footButton">
+                    <button class="btn btn-primary" v-on:click="submitForm('submit')" v-if="showSubmit">Submit</button>
+                </span>
+                                <span class="footButton">
+                    <button class="btn btn-primary" v-on:click="submitForm('save')" v-if="showSave">Save draft</button>
+                </span>
+                                <span class="footButton">
+                    <button class="btn btn-primary" v-on:click="abortForm()" v-if="showAbort">Abort</button>
+                </span>
+                                <span class="footButton">
+                    <button class="btn btn-primary" v-if="showAssign" v-on:click="assignForm('assign')">Assign</button>
+                </span>
+                                <span class="footButton">
+                    <button class="btn btn-primary" v-if="showApproval"
+                            v-on:click="approveForm('approve')">{{approveText}}</button>
+                </span>
+                                <span class="footButton">
+                    <button class="btn btn-primary" v-if="showRejectToOwner" v-on:click="approveForm('reject')">Reject to owner</button>
+                </span>
+
+                                <!--
+                                <span class="footButton">
+
+
+                                    <button class="btn btn-primary" v-if="showClose" v-on:click="approveForm('close')">Close</button>
+
+
+
+                                </span>
+                                <span class="footButton">
+                                    <button class="btn btn-primary" v-if="showClose" v-on:click="approveForm('toStoreroom')">Reject to stock</button>
+                                </span> -->
+
+                            </div>
+                        </div>
+                    </div>
+                </i-content>
+            </Layout>
+        </Layout>
+    </div>
+
+</div>
+
+</div>
+<div class="control-sidebar-bg"></div>
+</body>
+<script th:src="@{/static/js/environment.js}"></script>
+<!-- jQuery 2.2.3 -->
+<script th:src="@{/static/hlg/plugins/jQuery/jquery-2.2.3.min.js}"></script>
+<script th:src="@{/static/js/jquery-ui.js}"></script>
+<!-- 引入Bootstrap 相关组件 -->
+<script th:src="@{/static/hlg/plugins/bootstrap/js/bootstrap.min.js}"></script>
+<script th:src="@{/static/bootstrap/table/bootstrap-table.js}" type="text/javascript"></script>
+<script th:src="@{/static/bootstrap/js/bootstrap-tagsinput.js}" type="text/javascript"></script>
+<!-- 引入Bootstrap 文件上传相关组件 -->
+<script th:src="@{/static/fileinput/js/plugins/piexif.js}"></script>
+<script th:src="@{/static/fileinput/js/plugins/sortable.js}"></script>
+<script th:src="@{/static/fileinput/js/fileinput.js}"></script>
+<script th:src="@{/static/fileinput/js/locales/fr.js}"></script>
+<script th:src="@{/static/fileinput/js/locales/es.js}"></script>
+<script th:src="@{/static/fileinput/js/locales/zh.js}"></script>
+<script th:src="@{/static/fileinput/themes/fas/theme.js}"></script>
+<script th:src="@{/static/fileinput/themes/explorer-fas/theme.js}"></script>
+<!-- FastClick -->
+<script th:src="@{/static/hlg/plugins/fastclick/fastclick.js}"></script>
+<!-- AdminLTE App -->
+<script th:src="@{/static/hlg/dist/js/app.min.js}"></script>
+<!-- Sparkline -->
+<script th:src="@{/static/hlg/plugins/sparkline/jquery.sparkline.min.js}"></script>
+<!-- jvectormap -->
+<script th:src="@{/static/hlg/plugins/jvectormap/jquery-jvectormap-1.2.2.min.js}"></script>
+<script th:src="@{/static/hlg/plugins/jvectormap/jquery-jvectormap-world-mill-en.js}"></script>
+<!-- SlimScroll 1.3.0 -->
+<script th:src="@{/static/hlg/plugins/slimScroll/jquery.slimscroll.min.js}"></script>
+<!-- ChartJS 1.0.1 -->
+<script th:src="@{/static/hlg/plugins/chartjs/Chart.min.js}"></script>
+<script th:src="@{/static/vue/dist/vue.js}"></script>
+<script th:src="@{/static/layui/layui.js}"></script>
+<!-- <script th:src="@{/static/layer/layer.js}"></script> -->
+<!-- import iView -->
+<script th:src="@{/static/iviewui/dist/iview.min.js}"></script>
+
+<script th:src="@{'/static/js/incomingNMSE.js'(v=${unixstamp})}"></script>
+
+</html>

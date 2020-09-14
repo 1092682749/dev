@@ -1,0 +1,22 @@
+<div class="modal-header">
+  <div class="modal-title">查看 {{ record.id }} 信息</div>
+</div>
+<nz-spin *ngIf="!record" class="modal-spin"></nz-spin>
+<div sv-container *ngIf="record">
+  <sv label="title">{{ record.rName }}</sv>
+  <sv label="description">{{record.rDesc}}</sv>
+</div>
+<div>
+  <nz-transfer
+    [nzDataSource]="list"
+    [nzTitles]="['Source', 'Target']"
+    (nzSelectChange)="select($event)"
+    [nzSelectedKeys]="['0', '2']"
+    (nzChange)="change($event)"
+  >
+  </nz-transfer>
+</div>
+<div class="modal-footer">
+  <button (click)="submit()" nz-button type="submit" nzType="primary" [nzLoading]="http.loading">确定</button>
+  <button nz-button type="button" (click)="close()">关闭</button>
+</div>

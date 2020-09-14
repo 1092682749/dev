@@ -1,0 +1,27 @@
+<page-header [action]="phActionTpl" [home]="" [homeI18n]="'menu.main'">
+  <ng-template #phActionTpl>
+<!--   *ngIf="'share' == item.categoryId" <button (click)="add()" nz-button nzType="primary">新建</button>-->
+  </ng-template>
+</page-header>
+<nz-card>
+  <sf mode="search" [schema]="searchSchema" (formSubmit)="st.reset($event)" (formReset)="st.reset($event)"></sf>
+  <st #st [data]="url" [columns]="columns" [req]="req" [res]="res">
+    <ng-template st-row="custom" let-item let-index="index" let-column="column" >
+      <div >
+
+        <nz-rate [(ngModel)]="item.adminRate " [nzDisabled]="true" [nzAllowHalf]="false"></nz-rate>
+
+        <button nz-button nzType="link" nz-popover [nzSize]="'small'" [nzPopoverTitle]="'评级'"
+                [nzPopoverContent]="contentTemplate"
+        >
+          评级
+        </button>
+        <ng-template #contentTemplate>
+          <nz-rate [(ngModel)]="item.adminRate  " (ngModelChange)="adminRate($event, item)" [nzAllowHalf]="false"></nz-rate>
+        </ng-template>
+
+      </div>
+
+    </ng-template>
+  </st>
+</nz-card>

@@ -1,0 +1,25 @@
+<div nz-row class="gutter-row" [nzGutter]="[16, 24]" style="padding: 0;overflow: hidden; height: calc(100vh - 56px);">
+  <div nz-col class="gutter-row" [nzSpan]="3" style="background-color: #f4f6f7;  padding: 0;">
+    <ul nz-menu nzMode="inline" style="height: calc(100vh - 67px);padding-top: 20px">
+      <li nz-menu-item nzMatchRouter>
+
+        <i nz-icon nzType="star" class="bg-grey-dark text-white"></i>
+        <a [routerLink]="['/personalCenter/myCollect']">我的收藏</a>
+      </li>
+      <li nz-menu-item nzMatchRouter>
+        <i nz-icon nzType="user" class="mr-sm"></i>
+
+        <a [routerLink]="['/personalCenter/myCase']">我的Case</a>
+      </li>
+    </ul>
+  </div>
+  <!--  123-->
+  <div nz-col class="gutter-row" [nzSpan]="21"
+       style="background-color: #f4f6f7; height: calc(100vh - 56px); overflow: auto ">
+    <router-outlet></router-outlet>
+  </div>
+</div>
+
+
+
+

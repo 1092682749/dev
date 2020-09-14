@@ -1,0 +1,35 @@
+<!--<nz-modal [(nzVisible)]="true" nzTitle="The first Modal" (nzOnCancel)="resizeZoom()" (nzOnOk)="resizeZoom()">-->
+
+<!--asd-->
+<!--</nz-modal>-->
+
+<div class="modal-header">
+  <div class="modal-title">裁剪图片
+    <button (click)="resizeZoom()" nz-button nzType="primary'">保存裁剪</button>
+    <button (click)="nocut()" nz-button nzType="primary'">不裁剪</button>
+  </div>
+
+</div>
+<div id="image" >
+  <angular-cropper  #angularCropper [cropperOptions]="config"  [imageUrl]="ev?.target?.result"></angular-cropper>
+</div>
+<div class="modal-footer" style="text-align: left">
+  <nz-alert
+    nzType="info"
+    [nzMessage]="defaultMessage"
+    [nzDescription]="defaultDescriptionContent"
+    nzShowIcon
+  ></nz-alert>
+  <ng-template #defaultMessage>
+    <h3>缩放功能操作提示:</h3>
+  </ng-template>
+  <ng-template #defaultDescriptionContent>
+    1.滚动鼠标缩放底图 <br/>
+    2.鼠标放到裁剪区域可以拖动裁剪区域<br/>
+    3.鼠标放到裁剪区域边框可以调整裁剪区域大小<br/>
+    4.裁剪完成后点击图片可以缩放<br/>
+  </ng-template>
+</div>
+
+<input type="file" style="visibility: hidden" #fileUploadInput>
+<!--<iframe src="http://f10voas02:8080/ONB/qaForm/queryRecord"></iframe>-->

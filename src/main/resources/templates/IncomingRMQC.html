@@ -1,0 +1,733 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.w3.org/1999/xhtml" th:with="unixstamp=${#dates.createNow().time}">
+<head>
+    <meta charset="UTF-8">
+    <title>IncomingRMQC</title>
+    <!-- Tell the browser to be responsive to screen width -->
+    <meta content="width=device-width, initial-scale=1, maximum-scale=1, user-scalable=no" name="viewport">
+    <!--    <link rel="shortcut icon" type="image/x-icon" th:href="@{/static/hlg/dist/img/favicon.ico}">-->
+    <!--引入JQuery-->
+    <link th:href="@{/static/css/jquery-ui.css}" rel="stylesheet" type="text/css"/>
+    <!-- Bootstrap 3.3.6 -->
+    <link rel="stylesheet" th:href="@{/static/hlg/plugins/bootstrap/css/bootstrap.min.css}">
+    <link th:href="@{/static/css/bootstrap-table.css}" rel="stylesheet" type="text/css"/>
+    <link th:href="@{/static/bootstrap/css/bootstrap-tagsinput.css}" rel="stylesheet" type="text/css"/>
+    <link rel="stylesheet" th:href="@{/static/fileinput/css/fileinput.css}">
+    <!--    <script src="static/fontawesome-free-5.12.0-web/js/all.js"></script>-->
+    <link rel="stylesheet" th:href="@{/static/fontawesome-free-5.12.0-web/css/all.css}">
+    <link rel="stylesheet" th:href="@{/static/fileinput/themes/explorer-fas/theme.css}">
+    <!--引入Incoming样式-->
+    <link th:href="@{/static/css/IncomingCSS.css}" rel="stylesheet" type="text/css"/>
+    <!-- Font Awesome -->
+    <link rel="stylesheet" th:href="@{/static/hlg/dist/css/font-awesome.min.css}">
+    <!-- Ionicons -->
+    <link rel="stylesheet" th:href="@{/static/hlg/dist/css/ionicons.min.css}">
+    <!-- jvectormap -->
+    <link rel="stylesheet" th:href="@{/static/hlg/plugins/jvectormap/jquery-jvectormap-1.2.2.css}">
+    <!-- Theme style -->
+    <link rel="stylesheet" th:href="@{/static/hlg/dist/css/AdminLTE.min.css}">
+    <!-- AdminLTE Skins. Choose a skin from the css/skins
+         folder instead of downloading all of them to reduce the load. -->
+    <link rel="stylesheet" th:href="@{/static/hlg/dist/css/skins/_all-skins.min.css}">
+    <!--    layui-->
+    <link rel="stylesheet" th:href="@{/static/layui/css/layui.css}">
+
+    <link rel="stylesheet" th:href="@{/static/iviewui/dist/styles/iview.css}">
+    <style>
+        .bg-info {
+            background-color: #5bc0de;
+        }
+
+        .arrow-down {
+            border: solid #0a0a0a 10px;
+            width: 0;
+            height: 0;
+            border-bottom: solid transparent 10px;
+            border-left: solid transparent 10px;
+            border-right: solid transparent 10px;
+            background-color: transparent;
+        }
+
+        #boxs input {
+            margin: 10px;
+        }
+        .sys-name {
+            margin-left: 10px;
+            color: #acb4c1;
+            font-size: 26px;
+            font-family: 微软雅黑, "ms song", 宋体, Arial, verdana, Helvetica, sans-serif;
+        }
+
+        .layout {
+            border: 1px solid #d7dde4;
+            background: #f5f7f9;
+            position: relative;
+            border-radius: 4px;
+            overflow: hidden;
+        }
+
+        .layout-logo {
+            /*width: 100px;*/
+            height: 50px;
+            /* background: #5b6270; */
+            border-radius: 3px;
+            float: left;
+            position: relative;
+            /* top: 15px; */
+            left: 20px;
+        }
+
+        .layout-nav {
+            width: 255px;
+            margin: 0 auto;
+            margin-right: 20px;
+        }
+        .footButton {
+            margin-left: 20px;
+        }
+
+        .row {
+            margin-bottom: 10px;
+        }
+
+        .layui-colla-title {
+            height: 55px;
+            line-height: 55px;
+            color: #49a9ee;
+            background-color: #ffffff;
+            font-weight: 600;
+            font-size: 23px;
+        }
+
+
+        .layui-input-block input {
+            margin-bottom: 10px;
+        }
+
+        .checkbox-box input {
+            zoom: 180%;
+        }
+        .checkbox-box {
+            vertical-align: middle;
+        }
+        .table-bordered > tbody > tr > td {
+            border-color: #c8cbcc;
+            vertical-align: middle;
+            max-width: 287px;
+            word-break: break-word;
+        }
+
+        .table-bordered > thead > tr > th {
+            border-color: #c8cbcc;
+            text-align: center;
+            color: white;
+            background-color: #00c0ef;
+        }
+    </style>
+
+</head>
+<body>
+<div class="wrapper" id="app">
+    <input id="empInput" th:value="${employee}" hidden/>
+    <input id="rmqcFormInput" th:value="${rmqcForm}" hidden/>
+    <Layout style="height: 100vh">
+        <i-header :style="{padding: 0}" class="layout-header-bar"
+                  th:include="index-iview :: header"
+                  style="background: -webkit-gradient(linear, 0% 100%, 0% 0%, from(rgb(0, 0, 0)), to(rgb(71, 71, 71)));height: 52px;line-height: 52px;"
+        ></i-header>
+
+        <Layout style="height: 10px">
+            <Sider hide-trigger :style="{background: '#fff'}"
+                   th:include="index-iview :: aside"></Sider>
+            <i-content :style="{padding: '24px', minHeight: '280px', background: '#f3f3f3'}" style="overflow: auto">
+                <div style="width:100%">
+                    <div style="width:99%;margin:auto;">
+
+                        <!-- Content Header (Page header) -->
+
+                        <!-- Main content -->
+                        <!--        <section class="layui-container">-->
+                        <div class="layui-row"
+                             style="text-align: center; font-weight: 500; font-family: -webkit-pictograph; color:#0070c0;">
+                            <div style="padding-top:10px;"><h2>Raw Material Quality Complaint and Closure Record</h2>
+                            </div>
+                        </div>
+                        <div style="height:0px;width:100%;border:2px solid #0070c0;margin-top:10px;"></div>
+                        <!--            面板 start-->
+                        <div id="RMQC_STATUS">
+                            <div class="row">
+                                <div class="col-md-12 col-lg-12">
+                                    <table class="table table-bordered">
+                                        <tr style="text-align: center">
+                                            <th style="text-align: center" class="bg-info col-lg-2 col-md-2">当前申请人 :
+                                            </th>
+                                            <td class="col-lg-2 col-md-2">
+                                                <div>{{rmqcForm.applyUser}}</div>
+                                            </td>
+                                            <th style="text-align: center" class="bg-info col-lg-2 col-md-2">Form No :
+                                            </th>
+                                            <td class="col-lg-2 col-md-2">
+                                                <div id="Div3" v-if="showFormNo">{{rmqcForm.formNo}}</div>
+                                            </td>
+                                            <!--                                    <th style="text-align: center" class="bg-info col-lg-2 col-md-2">部门 :</th>-->
+                                            <!--                                    <td class="col-lg-2 col-md-2">-->
+                                            <!--                                        <div>{{rmqcForm.}}</div>-->
+                                            <!--                                    </td>-->
+                                            <th style="text-align: center" class="bg-info col-lg-2 col-md-2">时间 :</th>
+                                            <td class="col-lg-2 col-md-2">
+                                                <div id="AppFormTime"></div>
+                                            </td>
+                                        </tr>
+                                        <tr style="text-align: center">
+                                            <th style="text-align: center" class="bg-info col-lg-2 col-md-2">Status :
+                                            </th>
+                                            <td class="col-lg-2 col-md-2">
+                                                <div id="Div1">{{rmqcForm.statusNum}}</div>
+                                            </td>
+                                            <th style="text-align: center" class="bg-info col-lg-2 col-md-2">Current
+                                                Processor
+                                                :
+                                            </th>
+                                            <td class="col-lg-2 col-md-2">
+                                                <div id="Div2">{{rmqcForm.nextProcessor}}</div>
+                                            </td>
+
+                                        </tr>
+                                    </table>
+                                </div>
+                            </div>
+                        </div>
+
+                        <div style="margin-top: 10px">
+                            <div class="layui-collapse">
+                                <div class="layui-colla-item" id="baseInfo">
+                                    <h2 class="layui-colla-title" style="background-color: powderblue;">基本资料（申请人填写）</h2>
+                                    <div class="layui-colla-content layui-show">
+
+                                        <div class="panel panel-info">
+                                            <div class="panel-body">
+                                                <div class="row">
+                                                    <div class="form-group col-md-3">
+                                                        <div class="input-group">
+                                                            <div class="input-group-addon"><span
+                                                                    class="redStar">*</span>申请人
+                                                            </div>
+                                                            <input id="Applicant" class="form-control col-md-10"
+                                                                   type="text"
+                                                                   placeholder="申请人" v-model="rmqcForm.applyName"
+                                                                   disabled/>
+                                                        </div>
+                                                    </div>
+                                                    <div class="form-group col-md-3">
+                                                        <div class="input-group">
+                                                            <div class="input-group-addon">申请人工号</div>
+                                                            <input id="AppEmpNo" class="form-control col-md-10"
+                                                                   type="text"
+                                                                   placeholder="自动生成" v-model="rmqcForm.applyEmpNo"
+                                                                   disabled/>
+
+                                                        </div>
+                                                    </div>
+                                                    <div class="form-group col-md-3">
+                                                        <div class="input-group">
+                                                            <div class="input-group-addon"><span
+                                                                    class="redStar">*</span>申请人分机
+                                                            </div>
+                                                            <input id="AppPhone" class="form-control col-md-10"
+                                                                   type="text"
+                                                                   placeholder="自动生成" v-model="rmqcForm.applyPhone"
+                                                                   disabled/>
+                                                        </div>
+                                                    </div>
+                                                    <div class="form-group col-md-3">
+                                                        <div class="input-group">
+                                                            <div class="input-group-addon"><span
+                                                                    class="redStar">*</span>物料类别
+                                                            </div>
+                                                            <select class="form-control col-md-10" id="MatType"
+                                                                    v-model="rmqcForm.materialClassify">
+                                                                <option value="">请选择</option>
+                                                                <option value="V_Wafer">V_Wafer</option>
+                                                                <option value="L0_Gas">L0_Gas</option>
+                                                                <option value="L1_Chemical">L1_Chemical</option>
+                                                                <option value="L2_PR">L2_PR</option>
+                                                                <option value="L3_Quartz">L3_Quartz</option>
+                                                                <option value="L4_手套">L4_手套</option>
+                                                                <option value="L5_Paking material">L5_Paking material
+                                                                </option>
+                                                                <option value="L8_Pad/Disk">L8_Pad/Disk</option>
+                                                                <option value="L9_Target">L9_Target</option>
+                                                            </select>
+                                                        </div>
+                                                    </div>
+                                                </div>
+
+                                                <div class="row">
+
+                                                    <div class="form-group col-md-3">
+                                                        <div class="input-group">
+                                                            <div class="input-group-addon"><span
+                                                                    class="redStar">*</span>Supplier
+                                                            </div>
+                                                            <input id="Supplier" class="form-control col-md-10"
+                                                                   type="text"
+                                                                   v-model="rmqcForm.supplier"/>
+
+                                                        </div>
+                                                    </div>
+                                                    <div class="form-group col-md-3">
+                                                        <div class="input-group">
+                                                            <div class="input-group-addon"><span
+                                                                    class="redStar">*</span>Material
+                                                                No.
+                                                            </div>
+                                                            <input id="MaterialNo" class="form-control col-md-10"
+                                                                   type="text"
+                                                                   v-model="rmqcForm.materialNo"/>
+                                                        </div>
+                                                    </div>
+                                                    <div class="form-group col-md-3">
+                                                        <div class="input-group">
+                                                            <div class="input-group-addon"><span
+                                                                    class="redStar">*</span>Lot(Cylinder
+                                                                No.)
+                                                            </div>
+                                                            <input id="Lot" class="form-control col-md-10" type="text"
+                                                                   v-model="rmqcForm.lotNo"/>
+                                                        </div>
+                                                    </div>
+                                                    <div class="form-group col-md-3">
+                                                        <div class="input-group">
+                                                            <div class="input-group-addon"><span
+                                                                    class="redStar">*</span>Quantity
+                                                            </div>
+                                                            <input id="Quantity" class="form-control col-md-10"
+                                                                   type="text"
+                                                                   v-model="rmqcForm.quantity"/>
+
+                                                        </div>
+                                                    </div>
+                                                </div>
+
+                                                <div class="row">
+
+                                                    <div class="form-group col-md-3">
+                                                        <div class="input-group">
+                                                            <div class="input-group-addon"><span
+                                                                    class="redStar">*</span>Description
+                                                            </div>
+                                                            <textarea id="Description" class="form-control col-md-10"
+                                                                      v-model="rmqcForm.description"></textarea>
+                                                        </div>
+                                                    </div>
+                                                    <div class="form-group col-md-3">
+                                                        <div class="input-group">
+                                                            <div class="input-group-addon"><span
+                                                                    class="redStar">*</span>Who
+                                                            </div>
+                                                            <textarea id="Who" class="form-control col-md-10" type="text"
+                                                                   v-model="rmqcForm.who"></textarea>
+                                                        </div>
+                                                    </div>
+                                                    <div class="form-group col-md-3">
+                                                        <div class="input-group">
+                                                            <div class="input-group-addon"><span
+                                                                    class="redStar">*</span>What
+                                                            </div>
+                                                            <textarea id="What" class="form-control col-md-10" type="text"
+                                                                   v-model="rmqcForm.what"></textarea>
+
+                                                        </div>
+                                                    </div>
+                                                    <div class="form-group col-md-3">
+                                                        <div class="input-group">
+                                                            <div class="input-group-addon"><span
+                                                                    class="redStar">*</span>When
+                                                            </div>
+                                                            <textarea id="When" class="form-control col-md-10" type="text"
+                                                                   v-model="rmqcForm.whenEver"></textarea>
+                                                        </div>
+                                                    </div>
+                                                </div>
+
+
+                                                <div class="row">
+                                                    <div class="form-group col-md-3">
+                                                        <div class="input-group">
+                                                            <div class="input-group-addon"><span
+                                                                    class="redStar">*</span>Where
+                                                            </div>
+                                                            <textarea id="Where" class="form-control col-md-10" type="text"
+                                                                   v-model="rmqcForm.place"></textarea>
+                                                        </div>
+                                                    </div>
+                                                    <div class="form-group col-md-3">
+                                                        <div class="input-group">
+                                                            <div class="input-group-addon"><span
+                                                                    class="redStar">*</span>Why
+                                                            </div>
+                                                            <textarea id="Why" class="form-control col-md-10" type="text"
+                                                                   v-model="rmqcForm.why"></textarea>
+                                                        </div>
+                                                    </div>
+                                                    <div class="form-group col-md-3">
+                                                        <div class="input-group">
+                                                            <div class="input-group-addon"><span
+                                                                    class="redStar">*</span>How
+                                                            </div>
+                                                            <textarea id="How" class="form-control col-md-10" type="text"
+                                                                   v-model="rmqcForm.how"></textarea>
+                                                        </div>
+                                                    </div>
+                                                    <!-- <div class="form-group col-md-6">
+                                                        <div class="input-group">
+                                                            <div class="input-group-addon"><span id="redStar">*</span>附件</div>
+                                                            <input id="Attachment" class="form-control col-md-10" type="text" placeholder="此项需添加文件（5M以内）"/>
+                                                        </div>
+                                                    </div> -->
+                                                    <!--                                            <div class="form-group col-md-3">-->
+                                                    <!--                                                <div class="input-group">-->
+                                                    <!--                                                    <div class="input-group-addon"><span class="redStar">*</span>暂行措施/现况-->
+                                                    <!--                                                    </div>-->
+                                                    <!--                                                    <input id="Action" class="form-control col-md-10" type="text"-->
+                                                    <!--                                                           v-model="rmqcForm.interimMeasures"/>-->
+
+                                                    <!--                                                </div>-->
+                                                    <!--                                            </div>-->
+                                                </div>
+                                                <div class="row" v-if="showMeasuresList">
+                                                    <div style="padding: 10px"><h5>暂行措施List:</h5></div>
+                                                    <div v-for="(interimMeasures, index) in interimMeasuresList"
+                                                         :key="index">
+                                                        <div style="border: solid 1px; height: 55px; line-height: 55px">
+                                                            <div class="col-md-4">措施:{{interimMeasures.description}}
+                                                            </div>
+                                                            <div class="col-md-4">
+                                                                <a target="_blank"
+                                                                   v-bind:href="interimMeasures.downloadUrl">
+                                                                    {{interimMeasures.fileName}} </a>
+                                                            </div>
+                                                            <div class="col-md-4">
+                                                                <button class="btn btn-danger" v-if="showBaseInfoDelete"
+                                                                        v-on:click="deleteMeasures(interimMeasures.fileFid, index)">
+                                                                    删除
+                                                                </button>
+                                                            </div>
+                                                        </div>
+
+                                                    </div>
+                                                </div>
+                                                <div class="row">
+                                                    <div class="col-md-3">
+                                                        <div class="input-group">
+                                                            <div class="input-group-addon">暂行措施
+                                                            </div>
+                                                            <input class="form-control" v-model="description">
+                                                        </div>
+                                                    </div>
+                                                    <!--                                            <div class="col-md-3">-->
+                                                    <!--                                                <div class="input-group">-->
+                                                    <!--                                                    <div class="input-group-addon">文件名-->
+                                                    <!--                                                    </div>-->
+                                                    <!--                                                    <input class="form-control" v-model="interimMeasures.fileName">-->
+                                                    <!--                                                </div>-->
+                                                    <!--                                            </div>-->
+                                                    <div class="col-md-2">
+                                                        <Upload
+                                                                ref="measureFileUpload"
+                                                                multiple
+                                                                :on-success="handlerUploadResponse"
+                                                                :before-upload="beforeUploadFile"
+                                                                action="">
+                                                            <i-button icon="ios-cloud-upload-outline">Upload files
+                                                            </i-button>
+                                                        </Upload>
+                                                    </div>
+                                                    <div class="col-md-2">
+                                                        <i-button @click="onUploadFile()">添加暂行措施</i-button>
+                                                    </div>
+                                                </div>
+
+
+                                                <div class="row">
+
+                                                    <div class="form-group col-md-3">
+                                                        <div class="input-group">
+                                                            <div class="input-group-addon"><span
+                                                                    class="redStar">*</span>是否造成impact
+                                                            </div>
+                                                            <select class="form-control col-md-10" id="Impact"
+                                                                    v-model="rmqcForm.impact">
+                                                                <option value="">请选择</option>
+                                                                <option value="Y">Y</option>
+                                                                <option value="N">N</option>
+                                                            </select>
+                                                        </div>
+                                                    </div>
+                                                    <div class="form-group col-md-3">
+                                                        <div class="input-group">
+                                                            <div class="input-group-addon"><span
+                                                                    class="redStar">*</span>impact说明/数量
+                                                            </div>
+                                                            <input id="ImpactQuantity" class="form-control col-md-10"
+                                                                   type="text" v-model="rmqcForm.impactNumber"/>
+                                                        </div>
+                                                    </div>
+                                                    <div class="form-group col-md-3">
+                                                        <div class="input-group">
+                                                            <div class="input-group-addon"><span
+                                                                    class="redStar">*</span>是否保留有问题之物
+                                                            </div>
+                                                            <select class="form-control col-md-10" id="Retain"
+                                                                    v-model="rmqcForm.retain">
+                                                                <option value="">请选择</option>
+                                                                <option value="Y">Y</option>
+                                                                <option value="N">N</option>
+                                                            </select>
+                                                        </div>
+                                                    </div>
+                                                    <div class="form-group col-md-3">
+                                                        <div class="input-group">
+                                                            <div class="input-group-addon"><span
+                                                                    class="redStar">*</span>现象发生原因
+                                                            </div>
+                                                            <select class="form-control col-md-10" id="Reason"
+                                                                    v-model="rmqcForm.cause">
+                                                                <option value="">请选择</option>
+                                                                <option value="vendor">供应商</option>
+                                                                <option value="tsmc">TSMC</option>
+                                                                <option value="unknown">不明原因寻求厂商协助</option>
+                                                            </select>
+                                                        </div>
+                                                    </div>
+                                                </div>
+
+                                                <div v-if="showFileList">
+                                                    <div><h3>附件列表：</h3></div>
+                                                    <br>
+
+                                                    <div style="border: 1px solid; height: 50px; line-height: 50px"
+                                                         class="row"
+                                                         v-for="(item, index) in attachmentFiles" :key="index">
+                                                        <div class="col-md-6">
+                                                            <a target="_blank"
+                                                               v-bind:href="item.downloadUrl">文件名: {{item.fileName}}
+                                                                点击下载</a>
+                                                        </div>
+                                                        <button class="btn btn-danger" v-if="showBaseInfoDelete"
+                                                                v-on:click="deleteFile(item.fileFid, index)">删除
+                                                        </button>
+                                                    </div>
+                                                </div>
+
+                                                <div class="row">
+                                                    <div class="form-group col-md-6" v-if="showUpload">
+                                                        <div class="input-group">
+                                                            <div class="input-group-addon"><span
+                                                                    class="redStar">*</span>附件
+                                                            </div>
+                                                            <!-- <input id="Attachment" class="form-control col-md-10" type="text" placeholder="此项需添加文件（5M以内）"/> -->
+                                                            <input id="Attachment" name="file" type="file" multiple
+                                                                   class="file-loading" data-show-caption="true">
+                                                        </div>
+                                                    </div>
+                                                </div>
+
+                                            </div>
+                                        </div>
+                                    </div>
+
+                                </div>
+                            </div><!-- 基本资料 -->
+
+
+                            <div class="layui-collapse" v-if="showSQMEngineer">
+                                <div class="layui-colla-item">
+                                    <h2 class="layui-colla-title" style="background-color: powderblue;">指定SQM工程师</h2>
+                                    <div class="layui-colla-content layui-show">
+
+                                        <div class="panel panel-info">
+                                            <div class="panel-body">
+                                                <div class="row">
+                                                    <div class="form-group col-md-3">
+                                                        <div class="input-group">
+                                                            <div class="input-group-addon"><span
+                                                                    class="redStar">*</span>SQM工程师
+                                                            </div>
+                                                            <input id="sqmEngineer" class="form-control col-md-10"
+                                                                   type="text"
+                                                                   placeholder="SQM工程师" v-model="sqmEngineer" disabled/>
+                                                        </div>
+                                                    </div>
+                                                    <div class="col-md-2">
+                                                        <button class="btn btn-info" v-on:click="onSelectSQM">选择
+                                                        </button>
+                                                    </div>
+                                                </div>
+
+
+                                            </div>
+                                        </div>
+                                    </div>
+
+                                </div>
+                            </div><!-- sqm engineer -->
+
+                            <!--                    SQM工程师填写-->
+                            <div class="layui-collapse" v-if="showSQMFull">
+                                <div class="layui-colla-item">
+                                    <h2 class="layui-colla-title" style="background-color: powderblue;">SQM工程师填写</h2>
+                                    <div class="layui-colla-content layui-show">
+
+                                        <div class="panel panel-info">
+                                            <div class="panel-body" id=BasicInfo>
+
+                                                <div v-if="showReplyFileList">
+                                                    <div><h3>回复附件列表：</h3></div>
+                                                    <br>
+
+                                                    <div style="border: 1px solid; height: 50px; line-height: 50px"
+                                                         class="row"
+                                                         v-for="(item, index) in replyAttachmentFiles" :key="index">
+                                                        <div class="col-md-6">
+                                                            <a target="_blank"
+                                                               v-bind:href="item.downloadUrl">文件名: {{item.fileName}}
+                                                                点击下载</a>
+                                                        </div>
+                                                        <button class="btn btn-danger" v-if="showReplyUpload"
+                                                                v-on:click="deleteFile(item.fileFid, index)">删除
+                                                        </button>
+                                                    </div>
+                                                </div>
+
+                                                <div class="row" v-if="showReplyUpload">
+                                                    <div class="form-group col-md-12">
+                                                        <div class="input-group">
+                                                            <div class="input-group-addon"><span
+                                                                    class="redStar">*</span>回复附件
+                                                            </div>
+                                                            <!-- <input id="Attachment" class="form-control col-md-10" type="text"/> -->
+                                                            <input id="replyAttachment" name="file" type="file" multiple
+                                                                   class="file-loading" data-show-caption="true">
+                                                        </div>
+                                                    </div>
+
+                                                </div>
+                                                <div class="row">
+                                                    <div class="form-group col-md-6">
+                                                        <div class="input-group">
+                                                            <div class="input-group-addon"><span
+                                                                    class="redStar">*</span>结论
+                                                            </div>
+                                                            <!-- <input id="Attachment" class="form-control col-md-10" type="text"/> -->
+                                                            <input name="conclusion" multiple
+                                                                   v-model="rmqcForm.conclusion"
+                                                                   class="form-control">
+                                                        </div>
+                                                    </div>
+                                                </div>
+                                            </div>
+                                        </div>
+                                    </div>
+
+                                </div>
+                            </div><!-- SQM工程师填写 -->
+                        </div>
+
+
+                        <div style="margin-top: 10px">
+                            <!--                processLog-->
+                            <div class="layui-colla-item" v-if="showProcessLog">
+                                <h2 class="layui-colla-title" style="background-color: powderblue;">签核记录</h2>
+                                <div class="layui-colla-content layui-show">
+
+                                    <div class="panel panel-info">
+                                        <div class="panel-body">
+                                            <table id="processLogTable"></table>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                        </div><!-- margin-top -->
+
+
+                    </div>
+                </div>
+                <div class="row" style="text-align: center" v-if="showButtonBar" id="button-bar">
+                <span class="footButton">
+                    <button class="btn btn-primary" v-on:click="submitFrom('submit')" v-if="showSubmit">Submit</button>
+                </span>
+
+                    <span class="footButton">
+                    <button class="btn btn-primary" v-if="showSubmit"
+                            v-on:click="submitFrom('save')">Save draft</button>
+                </span>
+                    <span class="footButton">
+                    <button class="btn btn-primary" v-if="showApproval"
+                            v-on:click="approveForm('approve')">Approval</button>
+                </span>
+                    <span class="footButton">
+                    <button class="btn btn-primary" v-if="showReject" v-on:click="approveForm('reject')">Reject</button>
+                </span>
+                    <span class="footButton">
+                    <button class="btn btn-primary" v-if="showReturn"
+                            v-on:click="approveForm('toSQMEngineer')">Return</button>
+                </span>
+                    <span class="footButton">
+                    <button class="btn btn-primary" v-if="showAbort"
+                            @click="abort">Abort</button>
+                </span>
+
+                </div>
+
+
+                <!--模态框-->
+                <Modal v-model="SQMModalVisible" title="双击选择SQM工程师">
+                    <table class="table" id="SQMEngineerList"></table>
+                </Modal>
+
+            </i-content>
+        </Layout>
+    </Layout>
+</div>
+<!--    <Modal v-model="true" title="Welcome">Welcome to ViewUI123</Modal>-->
+</div>
+<div class="control-sidebar-bg"></div>
+</body>
+
+<!-- jQuery 2.2.3 -->
+<script th:src="@{/static/hlg/plugins/jQuery/jquery-2.2.3.min.js}"></script>
+<script th:src="@{/static/js/jquery-ui.js}" type="text/javascript"></script>
+<!-- 引入Bootstrap 相关组件 -->
+<script th:src="@{/static/hlg/plugins/bootstrap/js/bootstrap.min.js}"></script>
+<script th:src="@{/static/bootstrap/table/bootstrap-table.js}" type="text/javascript"></script>
+<script th:src="@{/static/bootstrap/js/bootstrap-tagsinput.js}" type="text/javascript"></script>
+<!-- 引入Bootstrap 文件上传相关组件 -->
+<script th:src="@{/static/fileinput/js/plugins/piexif.js}"></script>
+<script th:src="@{/static/fileinput/js/plugins/sortable.js}"></script>
+<script th:src="@{/static/fileinput/js/fileinput.js}"></script>
+<script th:src="@{/static/fileinput/js/locales/fr.js}"></script>
+<script th:src="@{/static/fileinput/js/locales/es.js}"></script>
+<script th:src="@{/static/fileinput/js/locales/zh.js}"></script>
+<script th:src="@{/static/fileinput/themes/fas/theme.js}"></script>
+<script th:src="@{/static/fileinput/themes/explorer-fas/theme.js}"></script>
+<!-- FastClick -->
+<script th:src="@{/static/hlg/plugins/fastclick/fastclick.js}"></script>
+<!-- AdminLTE App -->
+<script th:src="@{/static/hlg/dist/js/app.min.js}"></script>
+<!-- Sparkline -->
+<script th:src="@{/static/hlg/plugins/sparkline/jquery.sparkline.min.js}"></script>
+<!-- jvectormap -->
+<script th:src="@{/static/hlg/plugins/jvectormap/jquery-jvectormap-1.2.2.min.js}"></script>
+<script th:src="@{/static/hlg/plugins/jvectormap/jquery-jvectormap-world-mill-en.js}"></script>
+<!-- SlimScroll 1.3.0 -->
+<script th:src="@{/static/hlg/plugins/slimScroll/jquery.slimscroll.min.js}"></script>
+<!-- ChartJS 1.0.1 -->
+<script th:src="@{/static/hlg/plugins/chartjs/Chart.min.js}"></script>
+<script th:src="@{/static/vue/dist/vue.js}"></script>
+<script th:src="@{/static/layui/layui.js}"></script>
+<script th:src="@{'/static/js/environment.js'(v=${unixstamp})}"></script>
+<script th:src="@{/static/iviewui/dist/iview.min.js}"></script>
+<!-- <script th:src="@{/static/layer/layer.js}"></script> -->
+<script th:src="@{'/static/js/incomingRMQC.js'(v=${unixstamp})}"></script>
+</html>

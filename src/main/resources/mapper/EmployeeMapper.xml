@@ -1,0 +1,37 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.dyz.dev.dao.EmployeeMapper">
+    <resultMap id="BaseResultMap" type="com.dyz.dev.model.Employee">
+        <!--
+          WARNING - @mbg.generated
+        -->
+        <id column="EMP_NO" jdbcType="VARCHAR" property="empNo"/>
+        <result column="E_NAME" jdbcType="VARCHAR" property="eName"/>
+        <result column="CNAME_SH" jdbcType="VARCHAR" property="cnameSh"/>
+        <result column="MAIL_NAME" jdbcType="VARCHAR" property="mailName"/>
+        <result column="NOTESID" jdbcType="VARCHAR" property="notesid"/>
+        <result column="EMAIL_ADDR" jdbcType="VARCHAR" property="emailAddr"/>
+        <result column="DEPARTMENT" jdbcType="VARCHAR" property="department"/>
+        <result column="DEPT_NO" jdbcType="VARCHAR" property="deptNo"/>
+        <result column="FULLDEPTCODE" jdbcType="VARCHAR" property="fulldeptcode"/>
+        <result column="SECT_NO" jdbcType="VARCHAR" property="sectNo"/>
+        <result column="SECTION" jdbcType="VARCHAR" property="section"/>
+        <result column="SHIFT_CODE" jdbcType="VARCHAR" property="shiftCode"/>
+        <result column="STAT_CODE" jdbcType="VARCHAR" property="statCode"/>
+        <result column="MANAGER" jdbcType="VARCHAR" property="manager"/>
+        <result column="EXTENSION" jdbcType="VARCHAR" property="extension"/>
+        <result column="SITE_CODE" jdbcType="VARCHAR" property="siteCode"/>
+        <result column="LOCATION" jdbcType="VARCHAR" property="location"/>
+        <result column="IDL" jdbcType="VARCHAR" property="idl"/>
+        <result column="ASSIGNEE" jdbcType="VARCHAR" property="assignee"/>
+        <result column="SEX" jdbcType="VARCHAR" property="sex"/>
+        <result column="HIRE_DATE" jdbcType="TIMESTAMP" property="hireDate"/>
+        <result column="LASTUPDATED" jdbcType="TIMESTAMP" property="lastupdated"/>
+    </resultMap>
+
+    <select id="findManagerByDeptId" parameterType="string" resultMap="BaseResultMap">
+    select e.* from chr_t_dept_org t
+    left join chr_t_emp e on  t.manager_id = e.emp_no
+    where t.deptid = #{deptId}
+  </select>
+</mapper>

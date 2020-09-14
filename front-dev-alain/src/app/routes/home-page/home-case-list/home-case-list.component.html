@@ -1,0 +1,99 @@
+<nz-list nzItemLayout="vertical" style="padding: 20px; background-color: white">
+  <nz-list-item *ngFor="let item of list; let i = index">
+    <ng-container *ngIf="!item.loading">
+      <nz-list-item-meta>
+        <nz-list-item-meta-avatar
+          [nzSrc]="'https://pf/pfPhoto/photo/'+ item.createEmplid + '.JPG'"></nz-list-item-meta-avatar>
+        <nz-list-item-meta-title (click)="viewDetail(item)">
+          <a [routerLink]="['/details', {id: item.caseId}]">
+            <span *ngIf="!(item.categoryId == 'share')" class="tagImg">
+                <img *ngIf="item.status == 'accept'" class="close" src="./assets/closed.svg"/>
+                <img *ngIf="!(item.status == 'accept')" class="close" src="./assets/ongoing.svg"/>
+            </span>
+
+            <span *ngIf="item.categoryId == 'share'" class="tagImg">
+
+              <img class="share" src="./assets/fenxiang1.svg">
+            </span>
+            <a [routerLink]="['/details', {id: item.caseId}]">
+              <h3>
+                {{ item.title }}
+              </h3>
+            </a>
+          </a>
+        </nz-list-item-meta-title>
+        <nz-list-item-meta-description>
+          <p style="word-break: break-all; color: black;">
+            {{item.brief}}
+          </p>
+        </nz-list-item-meta-description>
+      </nz-list-item-meta>
+      <!--      <p style="font-weight: 300; color: black;" [innerHTML]="item.content">-->
+      <!--      </p>-->
+      <ul nz-list-item-actions>
+        <nz-list-item-action>
+          <i nz-tooltip title="为这篇文章点赞" nz-icon nzType="like" (click)="like(i, 'like')" class="zoom"
+             [style]="item.likeOrUnlike == 'like' ? 'color: #1890ff': ''"></i>{{item.upNum}}
+        </nz-list-item-action>
+        <!-- 不需要 unlike-->
+        <!--        <nz-list-item-action><i class="zoom" nz-icon nzType="caret-down" nzTheme="outline" (click)="like(i, 'unlike')"-->
+        <!--                                [style]="item.likeOrUnlike == 'unlike' ? 'color: #1890ff': ''"></i>{{item.downNum}}-->
+        <!--        </nz-list-item-action>-->
+        <nz-list-item-action><i nz-icon nzType="message" nzTheme="outline" (click)="viewDetail(item)"></i><span
+          style="padding-left: 5px">{{item.commentsNum}}</span></nz-list-item-action>
+
+
+        <nz-list-item-action>
+          <!--          <nz-tag nzColor="success">Java</nz-tag>-->
+          <!--          <nz-tag nzColor="error">Golang</nz-tag>-->
+          <nz-tag nzColor="processing" *ngFor="let tag of item.tagArr">{{tag}}</nz-tag>
+        </nz-list-item-action>
+        <nz-list-item-action>
+          <a (click)="collectCase(item)">收藏</a>
+        </nz-list-item-action>
+        <nz-list-item-action>
+          <button
+            [nzSize]="'small'"
+            nz-popconfirm
+            nzPopconfirmTitle="Are you sure delete this comment?"
+            (nzOnConfirm)="confirmDeleteCase(item.caseId, i)"
+            nzPopconfirmPlacement="top"
+            nz-button
+            nzType="link"
+            [acl]="item?.moduleName"
+            [acl-ability]="'admin'"
+          >
+            Delete
+          </button>
+        </nz-list-item-action>
+        <nz-list-item-action>
+          <button nz-button nzType="link" nz-popover [nzSize]="'small'" [nzPopoverTitle]="'评级'"
+                  [nzPopoverContent]="contentTemplate"
+                  [acl]="item?.moduleName"
+                  [acl-ability]="'admin'"
+          >
+            评级
+          </button>
+          <ng-template #contentTemplate>
+            <nz-rate [(ngModel)]="item.adminRate " (ngModelChange)="adminRate($event, item, i)" [nzAllowHalf]="false"></nz-rate>
+          </ng-template>
+        </nz-list-item-action>
+        <nz-list-item-action>
+          <nz-rate [(ngModel)]="item.adminRate " [nzDisabled]="true" ></nz-rate>
+        </nz-list-item-action>
+      </ul>
+    </ng-container>
+    <nz-skeleton *ngIf="item.loading" [nzAvatar]="true" [nzActive]="true" [nzTitle]="false"
+                 [nzLoading]="true"></nz-skeleton>
+    <nz-list-item-extra></nz-list-item-extra>
+  </nz-list-item>
+  <div class="loadmore" nz-list-load-more>
+    <button nz-button *ngIf="(!loadingMore) && (pages > pageNum)" (click)="onLoadMore()">loading more</button>
+    <span *ngIf="(pages <= pageNum)">没有更多了</span>
+  </div>
+</nz-list>
+
+<!--@primary-color: #1890ff;-->
+<!--@alain-default-header-bg: #1890ff;-->
+<!--@alain-default-aside-nav-text-hover-color: #1890ff;-->
+<!--@alain-default-aside-nav-selected-text-color: #1890ff;-->
