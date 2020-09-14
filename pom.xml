@@ -34,10 +34,28 @@
                     <groupId>org.springframework.boot</groupId>
                     <artifactId>spring-boot-starter-loggin</artifactId>
                 </exclusion>
-
+                <exclusion>
+                    <groupId>org.springframework.boot</groupId>
+                    <artifactId>spring-boot-starter-tomcat</artifactId>
+                </exclusion>
             </exclusions>
         </dependency>
+
         <dependency>
+            <groupId>javax.websocket</groupId>
+            <artifactId>javax.websocket-api</artifactId>
+            <version>1.0</version>
+            <scope>provided</scope>
+        </dependency>
+        <!-- https://mvnrepository.com/artifact/javax.servlet/javax.servlet-api -->
+        <dependency>
+            <groupId>javax.servlet</groupId>
+            <artifactId>javax.servlet-api</artifactId>
+            <version>4.0.1</version>
+            <scope>provided</scope>
+        </dependency>
+
+                <dependency>
             <groupId>org.springframework.boot</groupId>
             <artifactId>spring-boot-starter-tomcat</artifactId>
             <!--打包的时候可以不用包进去，别的设施会提供。事实上该依赖理论上可以参与编译，测试，运行等周期。
@@ -114,12 +132,12 @@
             <groupId>org.elasticsearch.client</groupId>
             <artifactId>elasticsearch-rest-client</artifactId>
             <version>7.7.1</version>
-<!--            <exclusions>-->
-<!--                <exclusion>-->
-<!--                    <groupId>commons-logging</groupId>-->
-<!--                    <artifactId>commons-logging</artifactId>-->
-<!--                </exclusion>-->
-<!--            </exclusions>-->
+            <!--            <exclusions>-->
+            <!--                <exclusion>-->
+            <!--                    <groupId>commons-logging</groupId>-->
+            <!--                    <artifactId>commons-logging</artifactId>-->
+            <!--                </exclusion>-->
+            <!--            </exclusions>-->
         </dependency>
         <!-- https://mvnrepository.com/artifact/org.elasticsearch/elasticsearch -->
         <dependency>
@@ -128,22 +146,22 @@
             <version>7.7.1</version>
         </dependency>
         <!-- https://mvnrepository.com/artifact/redis.clients/jedis -->
-<!--        <dependency>-->
-<!--        <groupId>redis.clients</groupId>-->
-<!--        <artifactId>jedis</artifactId>-->
-<!--        <version>2.7.3</version>-->
-<!--        </dependency>-->
-<!--&lt;!&ndash;        &lt;!&ndash;&lt;!&ndash; https://mvnrepository.com/artifact/org.springframework.data/spring-data-redis &ndash;&gt;&ndash;&gt;&ndash;&gt;-->
-<!--        <dependency>-->
-<!--        <groupId>org.springframework.data</groupId>-->
-<!--        <artifactId>spring-data-redis</artifactId>-->
-<!--        <version>1.7.2.RELEASE</version>-->
-<!--        </dependency>-->
+        <!--        <dependency>-->
+        <!--        <groupId>redis.clients</groupId>-->
+        <!--        <artifactId>jedis</artifactId>-->
+        <!--        <version>2.7.3</version>-->
+        <!--        </dependency>-->
+        <!--&lt;!&ndash;        &lt;!&ndash;&lt;!&ndash; https://mvnrepository.com/artifact/org.springframework.data/spring-data-redis &ndash;&gt;&ndash;&gt;&ndash;&gt;-->
+        <!--        <dependency>-->
+        <!--        <groupId>org.springframework.data</groupId>-->
+        <!--        <artifactId>spring-data-redis</artifactId>-->
+        <!--        <version>1.7.2.RELEASE</version>-->
+        <!--        </dependency>-->
         <!--&lt;!&ndash; https://mvnrepository.com/artifact/org.springframework.boot/spring-boot-starter-redis &ndash;&gt;-->
-<!--        <dependency>-->
-<!--        <groupId>org.springframework.boot</groupId>-->
-<!--        <artifactId>spring-boot-starter-redis</artifactId>-->
-<!--        </dependency>-->
+        <!--        <dependency>-->
+        <!--        <groupId>org.springframework.boot</groupId>-->
+        <!--        <artifactId>spring-boot-starter-redis</artifactId>-->
+        <!--        </dependency>-->
         <dependency>
             <groupId>org.junit.jupiter</groupId>
             <artifactId>junit-jupiter-api</artifactId>
@@ -276,18 +294,18 @@
         <!--<version>1.1</version>-->
         <!--<systemPath>${basedir}/lib/httpclient-4.3.1.wso2v1.jar</systemPath>-->
         <!--</dependency>-->
-<!--        <dependency>-->
-<!--        <groupId>com.dyz</groupId>-->
-<!--        <artifactId>activation-1.1.1.jar</artifactId>-->
-<!--        <version>1.1</version>-->
-<!--        <systemPath>${basedir}/lib/activation-1.1.1.jar</systemPath>-->
-<!--        </dependency>-->
-<!--        <dependency>-->
-<!--            <groupId>com.dyz</groupId>-->
-<!--            <artifactId>axis-1.4.jar</artifactId>-->
-<!--            <version>1.1</version>-->
-<!--            <systemPath>${basedir}/lib/axis-1.4.jar</systemPath>-->
-<!--        </dependency>-->
+        <!--        <dependency>-->
+        <!--        <groupId>com.dyz</groupId>-->
+        <!--        <artifactId>activation-1.1.1.jar</artifactId>-->
+        <!--        <version>1.1</version>-->
+        <!--        <systemPath>${basedir}/lib/activation-1.1.1.jar</systemPath>-->
+        <!--        </dependency>-->
+        <!--        <dependency>-->
+        <!--            <groupId>com.dyz</groupId>-->
+        <!--            <artifactId>axis-1.4.jar</artifactId>-->
+        <!--            <version>1.1</version>-->
+        <!--            <systemPath>${basedir}/lib/axis-1.4.jar</systemPath>-->
+        <!--        </dependency>-->
         <!-- https://mvnrepository.com/artifact/org.wso2.apache.httpcomponents/httpclient -->
 
         <!-- https://mvnrepository.com/artifact/org.apache.httpcomponents/httpclient -->
