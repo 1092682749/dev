@@ -1,405 +1,459 @@
-<?xml version="1.0" encoding="UTF-8"?>
+﻿<?xml version="1.0" encoding="UTF-8"?>
 <project xmlns="http://maven.apache.org/POM/4.0.0" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
          xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/xsd/maven-4.0.0.xsd">
-    <modelVersion>4.0.0</modelVersion>
+  <modelVersion>4.0.0</modelVersion>
 
-    <groupId>com.example</groupId>
-    <artifactId>demo02</artifactId>
-    <version>0.0.1-SNAPSHOT</version>
-    <packaging>war</packaging>
+  <groupId>com.dyz</groupId>
+  <artifactId>solver-center-api</artifactId>
+  <version>0.0.1-SNAPSHOT</version>
+  <packaging>jar</packaging>
 
-    <name>demo02</name>
-    <description>Dev project for Spring Boot</description>
+  <name>solver-center-api</name>
+  <description>solver-center-api project for Spring Boot</description>
 
-    <parent>
+  <parent>
+    <groupId>org.springframework.boot</groupId>
+    <artifactId>spring-boot-starter-parent</artifactId>
+    <version>2.0.4.RELEASE</version>
+    <relativePath/> <!-- lookup parent from repository -->
+  </parent>
+
+  <properties>
+    <project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
+    <project.reporting.outputEncoding>UTF-8</project.reporting.outputEncoding>
+    <java.version>1.8</java.version>
+    <skipTests>true</skipTests>
+  </properties>
+
+  <dependencies>
+    <!--        for war-->
+    <!--    <dependency>-->
+    <!--      <groupId>org.springframework.boot</groupId>-->
+    <!--      <artifactId>spring-boot-starter-tomcat</artifactId>-->
+    <!--      <scope>provided</scope>-->
+    <!--    </dependency>-->
+
+    <dependency>
+      <groupId>org.springframework.boot</groupId>
+      <artifactId>spring-boot-starter-web</artifactId>
+      <exclusions>
+        <exclusion>
+          <groupId>org.springframework.boot</groupId>
+          <artifactId>spring-boot-starter-loggin</artifactId>
+        </exclusion>
+        <!--          <exclusion>-->
+        <!--            <groupId>org.apache.tomcat.embed</groupId>-->
+        <!--            <artifactId>tomcat-embed-websocket</artifactId>-->
+        <!--          </exclusion>-->
+      </exclusions>
+    </dependency>
+    <!-- dynamic-sql 用于测试MyBatis3DynamicSql生成的代码          TODO for 代码生成器上线注掉-->
+    <dependency>
+      <groupId>org.mybatis.dynamic-sql</groupId>
+      <artifactId>mybatis-dynamic-sql</artifactId>
+      <version>1.1.4</version>
+      <scope>provided</scope>
+    </dependency>
+    <!-- https://mvnrepository.com/artifact/org.springframework.boot/spring-boot-starter-aop -->
+    <dependency>
+      <groupId>org.springframework.boot</groupId>
+      <artifactId>spring-boot-starter-aop</artifactId>
+    </dependency>
+    <!--        <dependency>-->
+    <!--            <groupId>org.springframework.boot</groupId>-->
+    <!--            <artifactId>spring-boot-devtools</artifactId>-->
+    <!--            <version>2.0.4.RELEASE</version>-->
+    <!--        </dependency>-->
+    <dependency>
+      <groupId>org.springframework.boot</groupId>
+      <artifactId>spring-boot-configuration-processor</artifactId>
+      <optional>true</optional>
+    </dependency>
+
+
+    <dependency>
+      <groupId>org.springframework.boot</groupId>
+      <artifactId>spring-boot-starter-test</artifactId>
+      <scope>test</scope>
+    </dependency>
+    <dependency>
+      <groupId>com.alibaba</groupId>
+      <artifactId>druid</artifactId>
+      <version>1.1.10</version>
+    </dependency>
+
+    <dependency>
+      <groupId>org.mybatis.spring.boot</groupId>
+      <artifactId>mybatis-spring-boot-starter</artifactId>
+      <version>1.3.1</version>
+    </dependency>
+    <!-- https://mvnrepository.com/artifact/mysql/mysql-connector-java -->
+    <dependency>
+      <groupId>mysql</groupId>
+      <artifactId>mysql-connector-java</artifactId>
+      <version>8.0.20</version>
+    </dependency>
+
+    <!--https://mvnrepository.com/artifact/org.mybatis.generator/mybatis-generator-core-->
+    <dependency>
+      <groupId>org.mybatis.generator</groupId>
+      <artifactId>mybatis-generator-core</artifactId>
+      <version>1.3.5</version>
+    </dependency>
+    <dependency>
+      <groupId>org.springframework.boot</groupId>
+      <artifactId>spring-boot-starter-data-redis</artifactId>
+    </dependency>
+
+    <dependency>
+      <groupId>org.springframework.boot</groupId>
+      <artifactId>spring-boot-starter-thymeleaf</artifactId>
+    </dependency>
+    <!-- https://mvnrepository.com/artifact/redis.clients/jedis -->
+    <dependency>
+      <groupId>redis.clients</groupId>
+      <artifactId>jedis</artifactId>
+      <version>3.0.0</version>
+    </dependency>
+    <!-- https://mvnrepository.com/artifact/com.hynnet/DJNativeSwing-SWT -->
+    <dependency>
+      <groupId>com.hynnet</groupId>
+      <artifactId>DJNativeSwing-SWT</artifactId>
+      <version>1.0.0</version>
+    </dependency>
+    <!-- https://mvnrepository.com/artifact/com.hynnet/DJNativeSwing -->
+    <dependency>
+      <groupId>com.hynnet</groupId>
+      <artifactId>DJNativeSwing</artifactId>
+      <version>1.0.0</version>
+    </dependency>
+    <!-- https://mvnrepository.com/artifact/com.alibaba/simpleimage -->
+    <!--        <dependency>-->
+    <!--            <groupId>com.alibaba</groupId>-->
+    <!--            <artifactId>simpleimage</artifactId>-->
+    <!--            <version>1.2.3</version>-->
+    <!--            <exclusions>-->
+    <!--                <exclusion>-->
+    <!--                    <artifactId>commons-lang</artifactId>-->
+    <!--                    <groupId>commons-lang</groupId>-->
+    <!--                </exclusion>-->
+    <!--                <exclusion>-->
+    <!--                    <artifactId>log4j</artifactId>-->
+    <!--                    <groupId>log4j</groupId>-->
+    <!--                </exclusion>-->
+    <!--                <exclusion>-->
+    <!--                    <artifactId>slf4j-log4j12</artifactId>-->
+    <!--                    <groupId>org.slf4j</groupId>-->
+    <!--                </exclusion>-->
+    <!--            </exclusions>-->
+    <!--        </dependency>-->
+    <!--<dependency>-->
+    <!--<groupId>com.corundumstudio.socketio</groupId>-->
+    <!--<artifactId>netty-socketio</artifactId>-->
+    <!--<version>1.7.11</version>-->
+    <!--</dependency>-->
+    <!-- https://mvnrepository.com/artifact/io.netty/netty-all -->
+    <dependency>
+      <groupId>io.netty</groupId>
+      <artifactId>netty-all</artifactId>
+      <version>4.1.29.Final</version>
+    </dependency>
+    <!--<dependency>-->
+    <!--<groupId>io.netty</groupId>-->
+    <!--<artifactId>netty-all</artifactId>-->
+    <!--<version>5.0.0.Alpha2</version>-->
+    <!--</dependency>-->
+    <!--<dependency>-->
+    <!--<groupId>org.springframework.boot</groupId>-->
+    <!--<artifactId>spring-boot-configuration-processor</artifactId>-->
+    <!--<optional>true</optional>-->
+    <!--</dependency>-->
+    <!--<dependency>-->
+    <!--<groupId>org.springframework.boot</groupId>-->
+    <!--<artifactId>spring-boot-starter-security</artifactId>-->
+    <!--</dependency>-->
+    <!--json开始-->
+    <dependency>
+      <groupId>commons-beanutils</groupId>
+      <artifactId>commons-beanutils</artifactId>
+      <version>1.9.3</version>
+      <exclusions>
+        <exclusion>
+          <artifactId>commons-collections</artifactId>
+          <groupId>commons-collections</groupId>
+        </exclusion>
+        <exclusion>
+          <artifactId>commons-logging</artifactId>
+          <groupId>commons-logging</groupId>
+        </exclusion>
+      </exclusions>
+    </dependency>
+    <!--<dependency>-->
+    <!--<groupId>commons-collections</groupId>-->
+    <!--<artifactId>commons-collections</artifactId>-->
+    <!--<version>3.1</version>-->
+    <!--</dependency>-->
+    <dependency>
+      <groupId>commons-lang</groupId>
+      <artifactId>commons-lang</artifactId>
+      <version>2.6</version>
+    </dependency>
+    <dependency>
+      <groupId>commons-collections</groupId>
+      <artifactId>commons-collections</artifactId>
+      <version>3.2.1</version>
+    </dependency>
+    <!--
+    <dependency>
+        <groupId>commons-logging</groupId>
+        <artifactId>commons-logging</artifactId>
+        <version>1.1.1</version>
+    </dependency>
+    -->
+    <dependency>
+      <groupId>net.sf.ezmorph</groupId>
+      <artifactId>ezmorph</artifactId>
+      <version>1.0.6</version>
+      <exclusions>
+        <exclusion>
+          <artifactId>commons-lang</artifactId>
+          <groupId>commons-lang</groupId>
+        </exclusion>
+      </exclusions>
+    </dependency>
+    <dependency>
+      <groupId>com.alibaba</groupId>
+      <artifactId>fastjson</artifactId>
+      <version>1.2.41</version>
+    </dependency>
+    <dependency>
+      <groupId>org.json</groupId>
+      <artifactId>json</artifactId>
+      <version>20160810</version>
+    </dependency>
+    <!--json结束-->
+    <dependency>
+      <groupId>com.google.guava</groupId>
+      <artifactId>guava</artifactId>
+      <version>23.0</version>
+    </dependency>
+    <!-- https://mvnrepository.com/artifact/org.apache.commons/commons-lang3 -->
+    <dependency>
+      <groupId>org.apache.commons</groupId>
+      <artifactId>commons-lang3</artifactId>
+      <version>3.8.1</version>
+    </dependency>
+    <!-- https://mvnrepository.com/artifact/org.freemarker/freemarker -->
+    <dependency>
+      <groupId>org.freemarker</groupId>
+      <artifactId>freemarker</artifactId>
+      <version>2.3.28</version>
+    </dependency>
+    <!-- https://mvnrepository.com/artifact/tk.mybatis/mapper-spring-boot-starter -->
+    <dependency>
+      <groupId>tk.mybatis</groupId>
+      <artifactId>mapper-spring-boot-starter</artifactId>
+      <version>2.1.5</version>
+      <exclusions>
+        <exclusion>
+          <artifactId>mybatis</artifactId>
+          <groupId>org.mybatis</groupId>
+        </exclusion>
+        <exclusion>
+          <artifactId>mybatis-spring</artifactId>
+          <groupId>org.mybatis</groupId>
+        </exclusion>
+      </exclusions>
+    </dependency>
+    <!--        TODO for 代码生成器上线注掉-->
+    <dependency>
+      <groupId>tk.mybatis</groupId>
+      <artifactId>mapper</artifactId>
+      <version>3.4.2</version>
+      <scope>provided</scope>
+    </dependency>
+
+    <!-- deal java.lang.NoClassDefFoundError: nu/xom/Builder -->
+    <dependency>
+      <groupId>xom</groupId>
+      <artifactId>xom</artifactId>
+      <version>1.2.5</version>
+    </dependency>
+    <!-- es -->
+    <dependency>
+      <groupId>org.elasticsearch.client</groupId>
+      <artifactId>elasticsearch-rest-high-level-client</artifactId>
+      <version>7.7.1</version>
+    </dependency>
+    <!-- https://mvnrepository.com/artifact/org.elasticsearch.client/elasticsearch-rest-client -->
+    <dependency>
+      <groupId>org.elasticsearch.client</groupId>
+      <artifactId>elasticsearch-rest-client</artifactId>
+      <version>7.7.1</version>
+      <exclusions>
+        <exclusion>
+          <groupId>commons-codec</groupId>
+          <artifactId>commons-codec</artifactId>
+        </exclusion>
+        <exclusion>
+          <groupId>commons-logging</groupId>
+          <artifactId>commons-logging</artifactId>
+        </exclusion>
+      </exclusions>
+    </dependency>
+    <!-- https://mvnrepository.com/artifact/org.elasticsearch/elasticsearch -->
+    <dependency>
+      <groupId>org.elasticsearch</groupId>
+      <artifactId>elasticsearch</artifactId>
+      <version>7.7.1</version>
+    </dependency>
+
+    <!-- https://mvnrepository.com/artifact/org.jboss.marshalling/jboss-marshalling -->
+    <dependency>
+      <groupId>org.jboss.marshalling</groupId>
+      <artifactId>jboss-marshalling</artifactId>
+      <version>2.0.5.Final</version>
+    </dependency>
+    <!-- https://mvnrepository.com/artifact/com.github.pagehelper/pagehelper-spring-boot-starter -->
+    <dependency>
+      <groupId>com.github.pagehelper</groupId>
+      <artifactId>pagehelper-spring-boot-starter</artifactId>
+      <version>1.2.5</version>
+      <exclusions>
+        <exclusion>
+          <artifactId>mybatis-spring-boot-starter</artifactId>
+          <groupId>org.mybatis.spring.boot</groupId>
+        </exclusion>
+      </exclusions>
+    </dependency>
+    <!-- https://mvnrepository.com/artifact/com.alibaba/druid -->
+    <dependency>
+      <groupId>com.alibaba</groupId>
+      <artifactId>druid</artifactId>
+      <version>1.1.10</version>
+    </dependency>
+    <!--        axis开始-->
+    <dependency>
+      <groupId>com.dyz</groupId>
+      <artifactId>axis</artifactId>
+      <version>1.0</version>
+      <systemPath>${basedir}/lib_for_webservice/axis.jar</systemPath>
+      <scope>system</scope>
+    </dependency>
+    <dependency>
+      <groupId>com.dyz</groupId>
+      <artifactId>axis-ant</artifactId>
+      <version>1.0</version>
+      <systemPath>${basedir}/lib_for_webservice/axis-ant.jar</systemPath>
+      <scope>system</scope>
+    </dependency>
+    <dependency>
+      <groupId>com.dyz</groupId>
+      <artifactId>commons-discovery-0.2</artifactId>
+      <version>1.0</version>
+      <systemPath>${basedir}/lib_for_webservice/commons-discovery-0.2.jar</systemPath>
+      <scope>system</scope>
+    </dependency>
+    <dependency>
+      <groupId>com.dyz</groupId>
+      <artifactId>commons-logging-1.0.4</artifactId>
+      <systemPath>${project.basedir}/lib_for_webservice/commons-logging-1.0.4.jar</systemPath>
+      <version>1.0</version>
+      <scope>system</scope>
+    </dependency>
+    <dependency>
+      <groupId>com.dyz</groupId>
+      <artifactId>jaxrpc</artifactId>
+      <version>1.0</version>
+      <systemPath>${project.basedir}/lib_for_webservice/jaxrpc.jar</systemPath>
+      <scope>system</scope>
+    </dependency>
+
+    <dependency>
+      <groupId>com.dyz</groupId>
+      <artifactId>saaj</artifactId>
+      <version>1.0</version>
+      <systemPath>${project.basedir}/lib_for_webservice/saaj.jar</systemPath>
+      <scope>system</scope>
+    </dependency>
+    <dependency>
+      <groupId>com.dyz</groupId>
+      <artifactId>wsdl4j</artifactId>
+      <version>1.0</version>
+      <systemPath>${project.basedir}/lib_for_webservice/wsdl4j-1.5.1.jar</systemPath>
+      <scope>system</scope>
+    </dependency>
+    <!--        axis 结束-->
+
+
+
+
+
+
+    <!-- Dubbo Spring Boot Starter -->
+    <dependency>
+      <groupId>org.apache.dubbo</groupId>
+      <artifactId>dubbo-spring-boot-starter</artifactId>
+      <version>2.7.7</version>
+    </dependency>
+    <dependency>
+      <groupId>com.vaadin.external.google</groupId>
+      <artifactId>android-json</artifactId>
+      <version>0.0.20131108.vaadin1</version>
+      <scope>compile</scope>
+    </dependency>
+  </dependencies>
+  <build>
+    <plugins>
+      <plugin>
         <groupId>org.springframework.boot</groupId>
-        <artifactId>spring-boot-starter-parent</artifactId>
-        <version>2.0.4.RELEASE</version>
-        <relativePath/> <!-- lookup parent from repository -->
-    </parent>
+        <artifactId>spring-boot-maven-plugin</artifactId>
+        <configuration>
+          <includeSystemScope>true</includeSystemScope>
+        </configuration>
+      </plugin>
+      <plugin>
+        <groupId>org.apache.maven.plugins</groupId>
+        <artifactId>maven-resources-plugin</artifactId>
+        <version>3.1.0</version>
+        <configuration>
+          <encoding>utf-8</encoding>
+        </configuration>
+      </plugin>
+      <plugin>
+        <artifactId>maven-compiler-plugin</artifactId>
+        <configuration>
+          <source>${java.version}</source>
+          <target>${java.version}</target>
+          <encoding>UTF-8</encoding>
+          <executable>true</executable>
+        </configuration>
+      </plugin>
+      <plugin>
+        <groupId>org.apache.maven.plugins</groupId>
+        <artifactId>maven-war-plugin</artifactId>
+        <version>3.1.0</version>
+        <configuration>
+          <warName>${project.artifactId}</warName>
+          <webResources>
+            <resource>
+              <directory>lib_for_webservice/</directory>
+              <targetPath>WEB-INF/lib</targetPath>
+              <includes>
+                <include>**/*.jar</include>
+              </includes>
+            </resource>
+            <resource>
+              <directory>${basedir}/src/main/resources/config/</directory>
+              <targetPath>WEB-INF/</targetPath>
+              <includes>
+                <include>**/*.xml</include>
+              </includes>
+            </resource>
 
-    <properties>
-        <project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
-        <project.reporting.outputEncoding>UTF-8</project.reporting.outputEncoding>
-        <java.version>1.8</java.version>
-        <skipTests>true</skipTests>
-    </properties>
-
-    <dependencies>
-        <dependency>
-            <groupId>org.springframework.boot</groupId>
-            <artifactId>spring-boot-starter-web</artifactId>
-            <exclusions>
-                <exclusion>
-                    <groupId>org.springframework.boot</groupId>
-                    <artifactId>spring-boot-starter-loggin</artifactId>
-                </exclusion>
-                <exclusion>
-                    <groupId>org.springframework.boot</groupId>
-                    <artifactId>spring-boot-starter-tomcat</artifactId>
-                </exclusion>
-            </exclusions>
-        </dependency>
-
-        <dependency>
-            <groupId>javax.websocket</groupId>
-            <artifactId>javax.websocket-api</artifactId>
-            <version>1.0</version>
-            <scope>provided</scope>
-        </dependency>
-        <!-- https://mvnrepository.com/artifact/javax.servlet/javax.servlet-api -->
-        <dependency>
-            <groupId>javax.servlet</groupId>
-            <artifactId>javax.servlet-api</artifactId>
-            <version>4.0.1</version>
-            <scope>provided</scope>
-        </dependency>
-
-                <dependency>
-            <groupId>org.springframework.boot</groupId>
-            <artifactId>spring-boot-starter-tomcat</artifactId>
-            <!--打包的时候可以不用包进去，别的设施会提供。事实上该依赖理论上可以参与编译，测试，运行等周期。
-                相当于compile，但是打包阶段做了exclude操作-->
-            <scope>compile</scope>
-        </dependency>
-        <!-- https://mvnrepository.com/artifact/org.springframework.boot/spring-boot-starter-aop -->
-        <dependency>
-            <groupId>org.springframework.boot</groupId>
-            <artifactId>spring-boot-starter-aop</artifactId>
-        </dependency>
-
-        <dependency>
-            <groupId>org.springframework.boot</groupId>
-            <artifactId>spring-boot-configuration-processor</artifactId>
-            <optional>true</optional>
-        </dependency>
-
-        <!--<dependency>-->
-        <!--<groupId>org.springframework.boot</groupId>-->
-        <!--<artifactId>spring-boot-starter-log4j</artifactId>-->
-        <!--</dependency>-->
-
-
-        <dependency>
-            <groupId>org.springframework.boot</groupId>
-            <artifactId>spring-boot-starter-test</artifactId>
-            <scope>test</scope>
-        </dependency>
-        <dependency>
-            <groupId>com.alibaba</groupId>
-            <artifactId>druid</artifactId>
-            <version>1.1.10</version>
-        </dependency>
-        <!--mybatis-plus-->
-        <!--<dependency>-->
-        <!--<groupId>org.projectlombok</groupId>-->
-        <!--<artifactId>lombok</artifactId>-->
-        <!--<optional>true</optional>-->
-        <!--</dependency>-->
-        <!--<dependency>-->
-        <!--<groupId>com.baomidou</groupId>-->
-        <!--<artifactId>mybatis-plus-boot-starter</artifactId>-->
-        <!--<version>3.0.1</version>-->
-        <!--</dependency>-->
-        <dependency>
-            <groupId>org.mybatis.spring.boot</groupId>
-            <artifactId>mybatis-spring-boot-starter</artifactId>
-            <version>1.3.1</version>
-        </dependency>
-        <dependency>
-            <groupId>mysql</groupId>
-            <artifactId>mysql-connector-java</artifactId>
-            <scope>runtime</scope>
-        </dependency>
-        <!--https://mvnrepository.com/artifact/org.mybatis.generator/mybatis-generator-core-->
-        <dependency>
-            <groupId>org.mybatis.generator</groupId>
-            <artifactId>mybatis-generator-core</artifactId>
-            <version>1.3.5</version>
-        </dependency>
-        <dependency>
-            <groupId>org.springframework.boot</groupId>
-            <artifactId>spring-boot-starter-data-redis</artifactId>
-        </dependency>
-
-        <dependency>
-            <groupId>org.elasticsearch.client</groupId>
-            <artifactId>elasticsearch-rest-high-level-client</artifactId>
-            <version>7.7.1</version>
-        </dependency>
-        <!-- https://mvnrepository.com/artifact/org.elasticsearch.client/elasticsearch-rest-client -->
-        <dependency>
-            <groupId>org.elasticsearch.client</groupId>
-            <artifactId>elasticsearch-rest-client</artifactId>
-            <version>7.7.1</version>
-            <!--            <exclusions>-->
-            <!--                <exclusion>-->
-            <!--                    <groupId>commons-logging</groupId>-->
-            <!--                    <artifactId>commons-logging</artifactId>-->
-            <!--                </exclusion>-->
-            <!--            </exclusions>-->
-        </dependency>
-        <!-- https://mvnrepository.com/artifact/org.elasticsearch/elasticsearch -->
-        <dependency>
-            <groupId>org.elasticsearch</groupId>
-            <artifactId>elasticsearch</artifactId>
-            <version>7.7.1</version>
-        </dependency>
-        <!-- https://mvnrepository.com/artifact/redis.clients/jedis -->
-        <!--        <dependency>-->
-        <!--        <groupId>redis.clients</groupId>-->
-        <!--        <artifactId>jedis</artifactId>-->
-        <!--        <version>2.7.3</version>-->
-        <!--        </dependency>-->
-        <!--&lt;!&ndash;        &lt;!&ndash;&lt;!&ndash; https://mvnrepository.com/artifact/org.springframework.data/spring-data-redis &ndash;&gt;&ndash;&gt;&ndash;&gt;-->
-        <!--        <dependency>-->
-        <!--        <groupId>org.springframework.data</groupId>-->
-        <!--        <artifactId>spring-data-redis</artifactId>-->
-        <!--        <version>1.7.2.RELEASE</version>-->
-        <!--        </dependency>-->
-        <!--&lt;!&ndash; https://mvnrepository.com/artifact/org.springframework.boot/spring-boot-starter-redis &ndash;&gt;-->
-        <!--        <dependency>-->
-        <!--        <groupId>org.springframework.boot</groupId>-->
-        <!--        <artifactId>spring-boot-starter-redis</artifactId>-->
-        <!--        </dependency>-->
-        <dependency>
-            <groupId>org.junit.jupiter</groupId>
-            <artifactId>junit-jupiter-api</artifactId>
-            <version>RELEASE</version>
-            <scope>compile</scope>
-        </dependency>
-        <dependency>
-            <groupId>org.springframework.boot</groupId>
-            <artifactId>spring-boot-starter-thymeleaf</artifactId>
-            <exclusions>
-                <exclusion>
-                    <groupId>ch.qos.logback</groupId>
-                    <artifactId>logback-classic</artifactId>
-                </exclusion>
-            </exclusions>
-        </dependency>
-        <!-- https://mvnrepository.com/artifact/com.hynnet/DJNativeSwing-SWT -->
-        <dependency>
-            <groupId>com.hynnet</groupId>
-            <artifactId>DJNativeSwing-SWT</artifactId>
-            <version>1.0.0</version>
-        </dependency>
-        <!-- https://mvnrepository.com/artifact/com.hynnet/DJNativeSwing -->
-        <dependency>
-            <groupId>com.hynnet</groupId>
-            <artifactId>DJNativeSwing</artifactId>
-            <version>1.0.0</version>
-        </dependency>
-        <!-- https://mvnrepository.com/artifact/com.alibaba/simpleimage -->
-        <dependency>
-            <groupId>com.alibaba</groupId>
-            <artifactId>simpleimage</artifactId>
-            <version>1.2.3</version>
-        </dependency>
-        <!--<dependency>-->
-        <!--<groupId>com.corundumstudio.socketio</groupId>-->
-        <!--<artifactId>netty-socketio</artifactId>-->
-        <!--<version>1.7.11</version>-->
-        <!--</dependency>-->
-        <!-- https://mvnrepository.com/artifact/io.netty/netty-all -->
-        <dependency>
-            <groupId>io.netty</groupId>
-            <artifactId>netty-all</artifactId>
-            <version>4.1.29.Final</version>
-        </dependency>
-        <!--<dependency>-->
-        <!--<groupId>io.netty</groupId>-->
-        <!--<artifactId>netty-all</artifactId>-->
-        <!--<version>5.0.0.Alpha2</version>-->
-        <!--</dependency>-->
-        <!--<dependency>-->
-        <!--<groupId>org.springframework.boot</groupId>-->
-        <!--<artifactId>spring-boot-configuration-processor</artifactId>-->
-        <!--<optional>true</optional>-->
-        <!--</dependency>-->
-        <!--<dependency>-->
-        <!--<groupId>org.springframework.boot</groupId>-->
-        <!--<artifactId>spring-boot-starter-security</artifactId>-->
-        <!--</dependency>-->
-        <!--json开始-->
-        <dependency>
-            <groupId>commons-beanutils</groupId>
-            <artifactId>commons-beanutils</artifactId>
-            <version>1.9.3</version>
-        </dependency>
-        <!--<dependency>-->
-        <!--<groupId>commons-collections</groupId>-->
-        <!--<artifactId>commons-collections</artifactId>-->
-        <!--<version>3.1</version>-->
-        <!--</dependency>-->
-        <dependency>
-            <groupId>commons-lang</groupId>
-            <artifactId>commons-lang</artifactId>
-            <version>2.6</version>
-        </dependency>
-        <dependency>
-            <groupId>commons-collections</groupId>
-            <artifactId>commons-collections</artifactId>
-            <version>3.2.1</version>
-        </dependency>
-        <dependency>
-            <groupId>commons-logging</groupId>
-            <artifactId>commons-logging</artifactId>
-            <version>1.1.1</version>
-        </dependency>
-        <dependency>
-            <groupId>net.sf.ezmorph</groupId>
-            <artifactId>ezmorph</artifactId>
-            <version>1.0.6</version>
-        </dependency>
-        <dependency>
-            <groupId>com.alibaba</groupId>
-            <artifactId>fastjson</artifactId>
-            <version>1.2.41</version>
-        </dependency>
-        <dependency>
-            <groupId>org.json</groupId>
-            <artifactId>json</artifactId>
-            <version>20160810</version>
-        </dependency>
-        <!--json结束-->
-        <dependency>
-            <groupId>com.google.guava</groupId>
-            <artifactId>guava</artifactId>
-            <version>23.0</version>
-        </dependency>
-        <!-- https://mvnrepository.com/artifact/org.apache.commons/commons-lang3 -->
-        <dependency>
-            <groupId>org.apache.commons</groupId>
-            <artifactId>commons-lang3</artifactId>
-            <version>3.8.1</version>
-        </dependency>
-        <!-- https://mvnrepository.com/artifact/org.freemarker/freemarker -->
-        <dependency>
-            <groupId>org.freemarker</groupId>
-            <artifactId>freemarker</artifactId>
-            <version>2.3.28</version>
-        </dependency>
-        <!-- https://mvnrepository.com/artifact/tk.mybatis/mapper-spring-boot-starter -->
-        <dependency>
-            <groupId>tk.mybatis</groupId>
-            <artifactId>mapper-spring-boot-starter</artifactId>
-            <version>2.1.5</version>
-        </dependency>
-
-
-        <!--<dependency>-->
-        <!--<groupId>com.dyz</groupId>-->
-        <!--<artifactId>httpclient-4.3.1.wso2v1</artifactId>-->
-        <!--<version>1.1</version>-->
-        <!--<systemPath>${basedir}/lib/httpclient-4.3.1.wso2v1.jar</systemPath>-->
-        <!--</dependency>-->
-        <!--        <dependency>-->
-        <!--        <groupId>com.dyz</groupId>-->
-        <!--        <artifactId>activation-1.1.1.jar</artifactId>-->
-        <!--        <version>1.1</version>-->
-        <!--        <systemPath>${basedir}/lib/activation-1.1.1.jar</systemPath>-->
-        <!--        </dependency>-->
-        <!--        <dependency>-->
-        <!--            <groupId>com.dyz</groupId>-->
-        <!--            <artifactId>axis-1.4.jar</artifactId>-->
-        <!--            <version>1.1</version>-->
-        <!--            <systemPath>${basedir}/lib/axis-1.4.jar</systemPath>-->
-        <!--        </dependency>-->
-        <!-- https://mvnrepository.com/artifact/org.wso2.apache.httpcomponents/httpclient -->
-
-        <!-- https://mvnrepository.com/artifact/org.apache.httpcomponents/httpclient -->
-        <dependency>
-            <groupId>org.apache.httpcomponents</groupId>
-            <artifactId>httpclient</artifactId>
-            <version>4.5.2</version>
-        </dependency>
-
-        <!-- https://mvnrepository.com/artifact/org.jboss.marshalling/jboss-marshalling -->
-        <dependency>
-            <groupId>org.jboss.marshalling</groupId>
-            <artifactId>jboss-marshalling</artifactId>
-            <version>2.0.5.Final</version>
-        </dependency>
-        <!-- https://mvnrepository.com/artifact/com.github.pagehelper/pagehelper-spring-boot-starter -->
-        <dependency>
-            <groupId>com.github.pagehelper</groupId>
-            <artifactId>pagehelper-spring-boot-starter</artifactId>
-            <version>1.2.5</version>
-        </dependency>
-        <!-- https://mvnrepository.com/artifact/com.alibaba/druid -->
-        <dependency>
-            <groupId>com.alibaba</groupId>
-            <artifactId>druid</artifactId>
-            <version>1.1.10</version>
-        </dependency>
-        <!-- https://mvnrepository.com/artifact/tk.mybatis/mapper -->
-        <dependency>
-            <groupId>tk.mybatis</groupId>
-            <artifactId>mapper</artifactId>
-            <version>4.1.5</version>
-        </dependency>
-        <!-- https://mvnrepository.com/artifact/log4j/log4j -->
-        <dependency>
-            <groupId>log4j</groupId>
-            <artifactId>log4j</artifactId>
-            <version>1.2.17</version>
-        </dependency>
-
-        <dependency>
-            <groupId>com.dyz</groupId>
-            <artifactId>dropwizard-core-2.0.0-rc12.jar</artifactId>
-            <version>1.0</version>
-            <scope>system</scope>
-            <systemPath>${basedir}/lib/dropwizard-core-2.0.0-rc12.jar</systemPath>
-        </dependency>
-        <dependency>
-            <groupId>javax.websocket</groupId>
-            <artifactId>javax.websocket-api</artifactId>
-            <version>1.0</version>
-            <scope>provided</scope>
-        </dependency>
-    </dependencies>
-    <build>
-        <plugins>
-            <plugin>
-                <groupId>org.springframework.boot</groupId>
-                <artifactId>spring-boot-maven-plugin</artifactId>
-            </plugin>
-            <plugin>
-                <artifactId>maven-compiler-plugin</artifactId>
-                <configuration>
-                    <source>${java.version}</source>
-                    <target>${java.version}</target>
-                    <encoding>UTF-8</encoding>
-                    <executable>true</executable>
-                </configuration>
-            </plugin>
-            <plugin>
-                <groupId>org.apache.maven.plugins</groupId>
-                <artifactId>maven-war-plugin</artifactId>
-                <version>3.1.0</version>
-                <configuration>
-                    <warName>${project.artifactId}</warName>
-                    <webResources>
-                        <resource>
-                            <directory>lib/</directory>
-                            <targetPath>WEB-INF/lib</targetPath>
-                            <includes>
-                                <include>**/*.jar</include>
-                            </includes>
-                        </resource>
-                        <resource>
-                            <directory>${basedir}/src/main/resources</directory>
-                            <targetPath>WEB-INF/</targetPath>
-                            <includes>
-                                <include>**/*.xml</include>
-                            </includes>
-                        </resource>
-                    </webResources>
-                </configuration>
-            </plugin>
-        </plugins>
-    </build>
-
+          </webResources>
+        </configuration>
+      </plugin>
+    </plugins>
+  </build>
 </project>

@@ -37,11 +37,18 @@ public class ${modelNameUpperCamel}Controller {
         return ResultGenerator.successResult();
     }
 
-    @GetMapping("/detail")
-    public Result detail(@RequestParam Integer id) {
-        ${modelNameUpperCamel} ${modelNameLowerCamel} = ${modelNameLowerCamel}Service.findById(id);
-        return ResultGenerator.successResult(${modelNameLowerCamel});
-    }
+	@GetMapping("/detail")
+	public Result detail(@RequestParam Object id) {
+	    	 ${modelNameUpperCamel} ${modelNameLowerCamel}  = null;
+	    	if (id instanceof String) {
+	    		${modelNameLowerCamel} = ${modelNameLowerCamel}Service.findByStringId((String)id);
+	    	}
+	    	else {
+	    		${modelNameLowerCamel} = ${modelNameLowerCamel}Service.findById((Integer)id);
+	    	}
+	        
+	        return ResultGenerator.successResult(${modelNameLowerCamel});
+	 }
 
     @GetMapping("/list")
     public Result list(PageBean<${modelNameUpperCamel}> page) {

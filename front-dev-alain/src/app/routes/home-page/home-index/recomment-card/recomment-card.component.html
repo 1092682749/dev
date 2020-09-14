@@ -1,0 +1,14 @@
+<!--[nzExtra]="extraTemplate"-->
+<nz-card style="width:99%; text-align: left" [nzBordered]="false" [nzCover]="title" >
+  <p *ngFor="let item of list">
+    <a (click)="viewDetail(item)">
+      {{item.title}}
+    </a>
+  </p>
+</nz-card>
+<ng-template #title>
+  <nz-alert nzType="warning" nzMessage="尚未解决的Case"></nz-alert>
+</ng-template>
+<ng-template #extraTemplate>
+  <a>More</a>
+</ng-template>

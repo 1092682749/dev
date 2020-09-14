@@ -24,7 +24,7 @@
 <!--            <module name="javax.xml.bind.jaxb-api" />-->
 <!--            <module name="org.apache.logging.log4j.log4j-api" />-->
         </exclusions>
-        <module-alias name="deployment.springboot-4"/>
+        <module-alias name="deployment.springboot-al"/>
     </deployment>
 </jboss-deployment-structure>
 <!--<jboss-deployment-structure>-->

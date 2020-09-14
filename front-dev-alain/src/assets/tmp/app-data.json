@@ -1,0 +1,72 @@
+{
+  "app": {
+    "name": "易答",
+    "description": "Ng-zorro admin panel front-end framework"
+  },
+  "user": {
+    "name": "Admin",
+    "avatar": "./assets/tmp/img/avatar.jpg",
+    "email": ""
+  },
+  "menu": [
+    {
+      "text": "Document Center",
+      "i18n": "menu.main",
+      "group": true,
+      "hideInBreadcrumb": true,
+      "children": [
+        {
+          "text": "launch",
+          "i18n": "menu.launch",
+          "icon": "anticon-rocket",
+          "shortcutRoot": true,
+          "children": []
+        },
+        {
+          "text": "case",
+          "i18n": "menu.case",
+          "link": "/admin/admin/case",
+          "icon": "anticon-appstore"
+        },
+        {
+          "text": "tags",
+          "i18n": "menu.tags",
+          "link": "/admin/admin/tag",
+          "icon": "anticon-appstore"
+        },
+        {
+          "text": "tags",
+          "i18n": "menu.dashboard",
+          "link": "/admin/dashboard",
+          "icon": "anticon-appstore"
+        },
+        {
+          "text": "权限管控",
+          "i18n": "menu.admin",
+          "icon": "anticon-dashboard",
+          "acl": "SOLVE_CENTER_ROLE_ADMIN",
+          "children": [
+            {
+              "text": "user",
+              "link": "/admin/admin/user",
+              "i18n": "menu.user"
+            },
+            {
+              "text": "role",
+              "link": "/admin/admin/role",
+              "i18n": "menu.role"
+            },
+            {
+              "text": "permission",
+              "link": "/admin/admin/permission",
+              "i18n": "menu.permission"
+            }
+          ]
+        }
+      ]
+    }
+
+  ]
+}
+
+

@@ -1,0 +1,119 @@
+<!DOCTYPE html>
+<html lang="en" xmlns:th="http://www.w3.org/1999/xhtml">
+<head>
+    <meta charset="UTF-8">
+    <title>Title</title>
+</head>
+<body>
+<!--
+
+-->
+<div class="layout">
+    <Layout>
+        <i-header th:fragment="header">
+            <i-menu mode="horizontal" theme="dark" active-name="1" style="background: -webkit-gradient(linear, 0% 100%, 0% 0%, from(rgb(0, 0, 0)), to(rgb(71, 71, 71)));height: 52px;line-height: 52px;">
+                <div class="layout-logo">
+                    <div style="margin-left:20px;float:left;display:inline"><img
+                            th:src="@{/static/hlg/img/logo.png}" width="45px" height="45px"/></div>
+                    <span class="sys-name">F10 Incoming Material Management System </span>
+                </div>
+                <div class="layout-nav" style="width: 305px;">
+                    <Menu-item name="1">
+                        <img th:src="'http://pf.tsmc.com.tw/pfPhoto/photo/' + ${session.user.empNo} + '.JPG'" style="width: 50px;height: 50px;"
+                             class="user-image" alt="User Image">
+                        <span class="hidden-xs" th:text="${session.user.cnameSh}"></span>
+                    </Menu-item>
+                    <a th:href="@{/logout}">
+                    <Menu-item name="2">
+                        <span><i class="fa fa-sign-out fa-lg" aria-hidden="true" style="    color: white;">Logout</i></span>
+                    </Menu-item>
+                    </a>
+                    <a th:href="@{/logout}">
+                        <Menu-item name="2">
+                            <span><i aria-hidden="true" style="    color: white;">SOP下载</i></span>
+                        </Menu-item>
+                    </a>
+                </div>
+            </i-menu>
+        </i-header>
+        <Layout style="height: 10px">
+            <Sider hide-trigger :style="{background: '#fff'}" th:fragment="aside">
+                <i-menu :active-name="activeItem" theme="light" width="auto"
+                        style="height: 100vh; min-width: 220px">
+                    <a th:href="@{/IncomingHome}" style="color: black">
+                    <Menu-item key="1" name="1">
+                        <Icon type="ios-search"></Icon>
+                        申请记录查询
+                    </Menu-item>
+                    </a>
+                    <a th:href="@{/IncomingNMSE}"  style="color: black">
+                    <Menu-item key="2" name="2">
+                        <Icon type="ios-create"></Icon>
+                        新建新物料/供应商评估
+                    </Menu-item>
+                    </a>
+                    <a th:href="@{/IncomingPCN}"  style="color: black">
+                    <Menu-item key="3" name="3">
+                        <Icon type="ios-create"></Icon>
+                        新建制程/规格变更
+                    </Menu-item>
+                    </a>
+                    <a th:href="@{/IncomingRMQC}" style="color: black">
+                        <Menu-item key="4" name="4">
+                            <Icon type="ios-create"></Icon>
+                            抱怨系统
+                        </Menu-item>
+                    </a>
+                    <a th:href="@{/imm/file/downloadFile?fid=1585378353627_F10_IMM_systen_SOP.ppt}" style="color: black">
+                        <Menu-item key="5" name="5">
+                            <Icon type="ios-create"></Icon>
+                            下载操作说明
+                        </Menu-item>
+                    </a>
+                </i-menu>
+            </Sider>
+        </Layout>
+    </Layout>
+    <!--    <Layout style="height: 100vh"> 原来的风格 -->
+    <!--        <Sider ref="side1" hide-trigger collapsible :collapsed-width="78" v-model="isCollapsed" th:fragment="aside">-->
+    <!--            <i-menu :active-name="activeItem" theme="dark" width="auto" :class="menuitemClasses">-->
+    <!--                <Menu-item name="1-1">-->
+    <!--                    <Icon type="ios-navigate"></Icon>-->
+    <!--                    <span><a href="www.baidu.com">Option 1</a></span>-->
+    <!--                </Menu-item>-->
+    <!--                <Menu-item name="1-2">-->
+    <!--                    <Icon type="ios-search"></Icon>-->
+    <!--                    <span><a>Option 2</a></span>-->
+    <!--                </Menu-item>-->
+    <!--                <Menu-item name="1-3">-->
+    <!--                    <Icon type="ios-settings"></Icon>-->
+    <!--                    <span><a>Option 3</a></span>-->
+    <!--                </Menu-item>-->
+    <!--            </i-menu>-->
+    <!--        </Sider>-->
+    <!--        <Layout>-->
+    <!--            <i-header :style="{padding: 0}" class="layout-header-bar" th:fragment="header">-->
+    <!--                <Icon @click.native="collapsedSider" :class="rotateIcon" :style="{margin: '0 20px'}" type="md-menu"-->
+    <!--                      size="24"></Icon>-->
+    <!--                &lt;!&ndash; User Account: style can be found in dropdown.less &ndash;&gt;-->
+    <!--                <ul id="navRight">-->
+    <!--                    <li>-->
+    <!--                        <a th:href="@{#}">-->
+    <!--                            <img th:src="@{/static/hlg/dist/img/user2-160x160.jpg}" class="user-image" alt="User Image">-->
+    <!--                            <span class="hidden-xs" th:text="${session.user.cnameSh}"></span>-->
+    <!--                        </a>-->
+    <!--                    </li>-->
+    <!--                    &lt;!&ndash; Control Sidebar Toggle Button &ndash;&gt;-->
+    <!--                    <li>-->
+    <!--                        <a th:href="@{/logout}" style="color: #2d8cf0" data-toggle="control-sidebar"><i class="fa fa-sign-out fa-lg" aria-hidden="true">Logout</i></a>-->
+    <!--                    </li>-->
+    <!--                </ul>-->
+
+    <!--            </i-header>-->
+    <!--            <i-content :style="{margin: '20px', background: '#fff', minHeight: '260px'}">-->
+    <!--            </i-content>-->
+    <!--        </Layout>-->
+    <!--    </Layout>-->
+</div>
+</body>
+</html>

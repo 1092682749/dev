@@ -1,0 +1,16 @@
+<nz-card style="width:99%; text-align: left" [nzBordered]="false" [nzCover]="title" >
+  <p *ngFor="let item of list">
+    <a (click)="viewDetail(item)">
+      {{item.title}}
+    </a>
+  </p>
+  <!--    <p>Card content</p>-->
+  <!--    <p>Card content</p>-->
+</nz-card>
+<ng-template #title>
+  <nz-alert nzType="info" [nzMessage]="extraTemplate"></nz-alert>
+</ng-template>
+<ng-template #extraTemplate>
+  我的收藏
+  <a routerLink="/personalCenter/myCollect" style="float: right">More</a>
+</ng-template>

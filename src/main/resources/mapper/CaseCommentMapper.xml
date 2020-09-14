@@ -1,0 +1,99 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.dyz.dev.dao.CaseCommentMapper">
+  <resultMap id="BaseResultMap" type="com.dyz.dev.model.CaseComment">
+    <id column="COMMENT_ID" jdbcType="INTEGER" property="commentId" />
+    <result column="CONTENT" jdbcType="BLOB" property="content" />
+    <result column="CASE_ID" jdbcType="INTEGER" property="caseId" />
+    <result column="COMMENT_TIME" jdbcType="TIMESTAMP" property="commentTime" />
+    <result column="COMMENT_EMPNO" jdbcType="VARCHAR" property="commentEmpno" />
+    <result column="COMMENT_LEVEL" jdbcType="VARCHAR" property="commentLevel" />
+    <result column="PARENT_ID" jdbcType="VARCHAR" property="parentId" />
+    <result column="TO_EMPNO" jdbcType="VARCHAR" property="toEmpno" />
+    <result column="LIKEORUNLIKE" jdbcType="VARCHAR" property="likeOrUnlike" />
+    <result column="UP_NUM" jdbcType="VARCHAR" property="upNum" />
+    <result column="DOWN_NUM" jdbcType="VARCHAR" property="downNum" />
+    <result column="ACTION_EMPNO" jdbcType="VARCHAR" property="actionEmpno" />
+    <result column="ACCEPT" jdbcType="VARCHAR" property="accept" />
+    <result column="admin_rate" jdbcType="VARCHAR" property="adminRate" />
+    <result column="TO_EMPNAME" jdbcType="VARCHAR" property="toEmpName" />
+    <result column="COMMENT_EMPNAME" jdbcType="VARCHAR" property="commentEmpName" />
+  </resultMap>
+  <resultMap id="aggregateEmpRateMap" type="com.dyz.dev.model.RateChart">
+    <result column="employee" jdbcType="VARCHAR" property="employee" />
+    <result column="totalRate" jdbcType="VARCHAR" property="totalRate" />
+    <result column="cName" jdbcType="VARCHAR" property="cName" />
+  </resultMap>
+  <resultMap id="collectionMap" type="com.dyz.dev.model.CaseComment">
+    <!--
+      WARNING - @mbg.generated
+    -->
+    <result column="COMMENT_ID" jdbcType="INTEGER" property="commentId" />
+    <result column="CONTENT" jdbcType="BLOB" property="content" />
+    <result column="CASE_ID" jdbcType="INTEGER" property="caseId" />
+    <result column="COMMENT_TIME" jdbcType="TIMESTAMP" property="commentTime" />
+    <result column="COMMENT_EMPNO" jdbcType="VARCHAR" property="commentEmpno" />
+    <result column="COMMENT_LEVEL" jdbcType="VARCHAR" property="commentLevel" />
+    <result column="PARENT_ID" jdbcType="VARCHAR" property="parentId" />
+    <result column="TO_EMPNO" jdbcType="VARCHAR" property="toEmpno" />
+    <result column="LIKEORUNLIKE" jdbcType="VARCHAR" property="likeOrUnlike" />
+    <result column="UP_NUM" jdbcType="VARCHAR" property="upNum" />
+    <result column="DOWN_NUM" jdbcType="VARCHAR" property="downNum" />
+    <result column="ACTION_EMPNO" jdbcType="VARCHAR" property="actionEmpno" />
+    <result column="ACCEPT" jdbcType="VARCHAR" property="accept" />
+    <result column="ADMIN_RATE" jdbcType="VARCHAR" property="adminRate" />
+    <result column="TO_EMPNAME" jdbcType="VARCHAR" property="toEmpName" />
+    <result column="COMMENT_EMPNAME" jdbcType="VARCHAR" property="commentEmpName" />
+    <collection property="children" ofType="com.dyz.dev.model.CaseComment" javaType="List"
+                column="{empno=ACTION_EMPNO, commentId=COMMENT_ID}"
+                select="findSubComments"/>
+  </resultMap>
+  <sql id="selectAllCommentsAndNum">
+    select t.*, nvl(up_num, 0) up_num, nvl(down_num, 0) down_num, lit.LIKEORUNLIKE, #{empno} ACTION_EMPNO
+     from solve_center_tbl_comment t
+    left join
+    (select
+     comment_id,
+     sum(case action when 'like' then 1 else 0 end) as up_num,
+     sum(case action when 'unlike' then 1 else 0 end) as down_num
+
+     from SOLVE_CENTER_TBL_LIKE ut
+
+     group by ut.comment_id
+     )
+     lt on t.comment_id = lt.comment_id
+   left join
+     (
+     select li.action LIKEORUNLIKE, li.comment_id
+     from SOLVE_CENTER_TBL_LIKE li where li.action_empno = #{empno}) lit
+     on lit.comment_id = t.comment_id
+
+  </sql>
+  <select id="findComments" resultMap="collectionMap">
+    <include refid="selectAllCommentsAndNum"></include>
+    where CASE_ID = #{caseId}
+    and comment_level = '1'
+    and nvl(is_delete, 'N') != 'Y'
+    order by comment_time asc
+  </select>
+
+  <select id="findSubComments" resultMap="BaseResultMap">
+
+
+  <include refid="selectAllCommentsAndNum"></include>
+
+  where PARENT_ID = #{commentId}
+  and comment_level = '2'
+  and nvl(is_delete, 'N') != 'Y'
+  order by comment_time asc
+
+  </select>
+
+  <select id="aggregateEmpRate" resultMap="aggregateEmpRateMap">
+    select tmp.comment_empname as employee, sum(tmp.admin_rate) as totalRate from
+        (select t.admin_rate, t.comment_empname, cs.module_name from solve_center_tbl_comment t
+                left join solve_center_tbl_case_form cs on t.case_id = cs.case_id where cs.module_name like '%' || #{moduleName} || '%'
+                and (t.is_delete = 'N' or t.is_delete is null)) tmp
+    group by tmp.comment_empname
+  </select>
+</mapper>

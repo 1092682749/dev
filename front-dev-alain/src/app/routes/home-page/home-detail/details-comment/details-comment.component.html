@@ -1,0 +1,17 @@
+
+
+<div class="modal-header">
+  <div class="modal-title">回复 {{ review.commentEmpno }} 的评论</div>
+</div>
+<!--<nz-spin *ngIf="!i" class="modal-spin"></nz-spin>-->
+<sf *ngIf="true" #sf mode="edit" [schema]="schema" [ui]="ui" [formData]="i" button="none">
+  <app-tsmc-editor [(ngModel)]="content"></app-tsmc-editor>
+  <div class="modal-footer">
+    <button nz-button type="button" (click)="close()">关闭</button>
+    <button nz-button type="submit" nzType="primary" (click)="save(sf.value)" [disabled]="!sf.valid" [nzLoading]="http.loading">评论</button>
+  </div>
+</sf>
+
+
+<!--<app-tsmc-editor></app-tsmc-editor>-->
+<!--  -->

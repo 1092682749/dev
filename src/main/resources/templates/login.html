@@ -1,13 +1,226 @@
-<!DOCTYPE html>
-<html lang="en">
+<!DOCTYPE html PUBLIC "-//W3C//DTD HTML 4.01 Transitional//EN" "http://www.w3.org/TR/html4/loose.dtd">
+<html xmlns:th="http://www.w3.org/1999/xhtml">
 <head>
-    <meta charset="UTF-8">
-    <title>Title</title>
+    <link rel="stylesheet" th:href="@{/static/layui/css/layui.css}">
+    <link rel="icon" type="image/x-icon" th:href="@{/static/hlg/img/domain.png}"/>
+    <meta http-equiv="Content-Type" content="text/html; charset=utf-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=EmulateIE7, IE=9"/>
+    <meta http-equiv="X-UA-Compatible" content="IE=edge,Chrome=1"/>
+
+    <title>Office Auto System</title>
+</head>
+<title>SignIn</title>
+<link th:href="@{/static/login/login.css}" rel="stylesheet" type="text/css"/>
+
 </head>
 <body>
-    login
+<div class="login">
+    <div class="box png">
+        <div class="header">
+            <h2 class="logo png">
+                <img style="position: absolute; left: 23px; top: 5px;" alt=""
+                     th:src="@{/static/hlg/img/logo.png}"
+                     height="55px" width="55px"/> Office Application System
+            </h2>
+        </div>
+        <form action="" method="post">
+            <ul>
+                <li><label> 用户名</label> <input class="text" id="Account"
+                                               style="width: 208px;" name="Account" type="text"/><br/></li>
+                <li><label> 密 码</label> <input class="text"
+                                               style="width: 208px;" id="password" name="password"
+                                               onkeydown="keyDown(event)"
+                                               type="password"/><br/></li>
+                <li><label> Domain</label> <select class="text" id="Domain"
+                                                   name="Domain">
+                    <option value="TSMCSH">TSMCSH</option>
+                    <option value="TSMC">TSMC</option>
+                    <option value="TSMCRO">TSMCRO</option>
+                </select></li>
+                <li class="submits"><input type="button" class="submit"
+                                           value="登录" id="login"/></li>
+            </ul>
+        </form>
+        <div class="copyright">
+            ©TSMC2016&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;CN-IT BOS
+        </div>
+    </div>
+    <div class="air-balloon ab-1 png"></div>
+    <div class="air-balloon ab-2 png"></div>
+    <div class="footer"></div>
+</div>
 </body>
-</html>
-<script>
+<script th:src="@{/static/hlg/plugins/jQuery/jquery-2.2.3.min.js}"></script>
+<script type="text/javascript"
+        th:src="@{/static/login/login.js}"></script>
+<script th:src="@{/static/layer/layer.js}"></script>
+<script th:src="@{/static/js/environment.js}"></script>
+<script type="text/javascript">
+    function clickShowAndHide(targetId) {
+        $(targetId).focus();
+        if ($(targetId).css("display") == "none") {
+            $(targetId).show();
+        } else {
+            $(targetId).hide();
+        }
+    };
+
+    function clickActive(targetId, targetId2) {
+        $(targetId2).removeClass("active");
+        if ($(targetId).hasClass("active")) {
+            $(targetId).removeClass("active");
+        } else {
+            $(targetId).addClass("active");
+        }
+    };
+
+    function timeAddition(targetId) {
+        $(targetId).datetimepicker({
+            format: "yyyy-mm-dd hh:ii",
+            autoclose: true,
+            todayBtn: true,
+            minuteStep: 10
+        });
+    };
+    //function timeAddition(targetId) {
+    //	$(targetId).datetimepicker({
+    //        format: "yyyy-mm-dd hh:ii",
+    //        autoclose: true,
+    //        todayBtn: true,
+    //    });
+    //};
+
+    function ajaxBlock() {
+        $.ajaxSetup({
+            layerIndex: -1,
+            beforeSend: function () {
+                this.layerIndex = layer.load(2, {shade: [0.1, '#f0f0f0']});
+            },
+            complete: function () {
+                layer.close(this.layerIndex);
+            }
+        });
+    }
+
+    function getYear() {
+        var now = new Date();
+        now.setDate(1);
+
+        var year = now.getFullYear(); // 年
+        return year;
+    }
+
+    function getMonth() {
+        var now = new Date();
+        now.setDate(1);
+
+        var month = parseInt(now.getMonth() + 1); // 月
+        if (month < 10) {
+            month = "0" + month;
+        }
+        return month;
+    }
+
+    function setYear(id) {
+        if ($(id).val() === "" || $(id).val() === null) {
+            $(id).val(getYear());
+        }
+    }
+
+    function setMonth(id) {
+        if ($(id).val() === "" || $(id).val() === null) {
+            $(id).val(getMonth());
+        }
+    }
+
+    function layerBlock() {
+        $.ajaxSetup({
+            layerIndex: -1,
+            beforeSend: function () {
+                this.layerIndex = layer.load(2, {shade: [0.1, '#f0f0f0']});
+            },
+            complete: function () {
+                layer.close(this.layerIndex);
+            }
+        });
+    }
+
+
+    window.localStorage.clear();
+    console.log("localStorage was cleared!");
+    // 获取用户名  changed 2019/6/5 9:18
+    $("#Account").keyup(function () {
+        var value = $.trim($("#Account").val());
+        $("#Account").val(value);
+    });
+    // 点击登录  获取用户名和密码  进行传递   changed 2019/6/5 9:18
+    console.log("绑定事件");
+    $("#login").click(function () {
+        var account = $("#Account").val().toUpperCase();
+        var password = $("#password").val();
+        var Domain = $("#Domain").val()
+// 		if(account==""||account==null){
+// 			layer.msg("用户名不能为空！",{icon:2});	
+// 			return false;
+// 		}
+// 		if(password==""||password==null){
+// 			layer.msg("密码不能为空！",{icon:2});	
+// 			return false;
+// 		}
+
+        console.log("trigger click");
+        ajaxBlock();
+        $.post("login",
+            {
+                account: account,
+                password: password,
+                domain: Domain
+            },
+            function (data) {
+                if (data['code'] == "0") {
+                    layer.msg("恭喜您登陆成功,马上进入主页！", {icon: 1});
+                    //setTimeout("window.location.href='${pageContext.request.contextPath }/officeMainPage'",2000);
+                    setTimeout("window.location.href = ROOT_URL + '/IncomingHome';", 2000);  //changed at 20190610
+                } else {
+                    layer.msg("对不起,您输入的NT无权限或用户名密码不正确！", {icon: 2});
+                    return false;
+                }
+            });
+
+    });
+
+    function keyDown(e) {
+        var event = window.event || e;
+        if (event.keyCode == 13) {
+            var account = $("#Account").val().toUpperCase();
+            var password = $("#password").val();
+            if (account == "" || account == null) {
+                layer.msg("用户名不能为空！", {icon: 2});
+                return false;
+            }
+            /* if(password==""||password==null){
+                layer.msg("密码不能为空！",{icon:2});
+                return false;
+            } */
+            ajaxBlock();
+            $.post("login",
+                {
+                    account: account,
+                    password: password,
+                },
+                function (data) {
+                    if (data['code'] == "0") {
+                        layer.msg("恭喜您登陆成功,马上进入主页！", {icon: 1});
+                        setTimeout("window.location.href = ROOT_URL + '/IncomingHome';", 2000);  //changed at 20190610
+                    } else {
+                        layer.msg("对不起,您输入的NT无权限或用户名密码不正确！", {icon: 2});
+                        return false;
+                    }
+                });
+        }
+    }
+
 
 </script>
+</html>
+

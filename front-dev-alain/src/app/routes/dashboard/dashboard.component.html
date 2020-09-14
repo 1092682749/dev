@@ -1,0 +1,15 @@
+<page-header></page-header>
+
+<nz-card>
+<!--  <div *ngIf="tags">-->
+<!--    <g2-tag-cloud [data]="tags" height="400"></g2-tag-cloud>-->
+<!--  </div>-->
+
+<!--  <g2-gauge [title]="'已解决'" height="164" [percent]="percent" [color]="color"></g2-gauge>-->
+
+  <div *ngIf="salesData">
+    <g2-bar height="200" [title]="'评分'" [data]="salesData" (clickItem)="handleClick($event)"></g2-bar>
+  </div>
+<!--  <button nz-button (click)="handleClick($event)">通知</button>-->
+</nz-card>
+

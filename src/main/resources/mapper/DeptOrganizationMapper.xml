@@ -1,0 +1,62 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.dyz.dev.dao.DeptOrganizationMapper">
+  <resultMap id="BaseResultMap" type="com.dyz.dev.model.DeptOrganization">
+    <!--
+      WARNING - @mbg.generated
+    -->
+    <result column="DEPTID" jdbcType="VARCHAR" property="deptid" />
+    <result column="TREE_LEVEL_NUM" jdbcType="DECIMAL" property="treeLevelNum" />
+    <result column="TREE_LEVEL" jdbcType="VARCHAR" property="treeLevel" />
+    <result column="TW_REPORT_DEPTID" jdbcType="VARCHAR" property="twReportDeptid" />
+    <result column="TW_CMOFFICE" jdbcType="VARCHAR" property="twCmoffice" />
+    <result column="TW_GM" jdbcType="VARCHAR" property="twGm" />
+    <result column="TW_AREA" jdbcType="VARCHAR" property="twArea" />
+    <result column="TW_FUNCSITE" jdbcType="VARCHAR" property="twFuncsite" />
+    <result column="TW_DIV" jdbcType="VARCHAR" property="twDiv" />
+    <result column="TW_DEPT" jdbcType="VARCHAR" property="twDept" />
+    <result column="TW_SECT" jdbcType="VARCHAR" property="twSect" />
+    <result column="MANAGER_ID" jdbcType="VARCHAR" property="managerId" />
+    <result column="TW_SITE_CODE" jdbcType="VARCHAR" property="twSiteCode" />
+    <result column="LOCATION" jdbcType="VARCHAR" property="location" />
+    <result column="DEPT_DESCRSHORT" jdbcType="VARCHAR" property="deptDescrshort" />
+    <result column="DEPT_DESCR" jdbcType="VARCHAR" property="deptDescr" />
+    <result column="DEPT_CHINESE" jdbcType="VARCHAR" property="deptChinese" />
+    <result column="DIV_DESCRSHORT" jdbcType="VARCHAR" property="divDescrshort" />
+    <result column="DIV_DESCR" jdbcType="VARCHAR" property="divDescr" />
+    <result column="DIV_CHINESE" jdbcType="VARCHAR" property="divChinese" />
+    <result column="AREA_DESCRSHORT" jdbcType="VARCHAR" property="areaDescrshort" />
+    <result column="AREA_DESCR" jdbcType="VARCHAR" property="areaDescr" />
+    <result column="AREA_CHINESE" jdbcType="VARCHAR" property="areaChinese" />
+    <result column="FUNC_DESCRSHORT" jdbcType="VARCHAR" property="funcDescrshort" />
+    <result column="FUNC_DESCR" jdbcType="VARCHAR" property="funcDescr" />
+    <result column="FUNC_CHINESE" jdbcType="VARCHAR" property="funcChinese" />
+    <result column="TW_DEPT_DESCRSHORT" jdbcType="VARCHAR" property="twDeptDescrshort" />
+    <result column="TW_DEPT_DESCR" jdbcType="VARCHAR" property="twDeptDescr" />
+    <result column="TW_DEPT_CHINESE" jdbcType="VARCHAR" property="twDeptChinese" />
+    <result column="LOCATION_DESCR" jdbcType="VARCHAR" property="locationDescr" />
+    <result column="TW_CMOFFICE1" jdbcType="VARCHAR" property="twCmoffice1" />
+    <result column="TW_GM1" jdbcType="VARCHAR" property="twGm1" />
+    <result column="TW_AREA1" jdbcType="VARCHAR" property="twArea1" />
+    <result column="TW_FUNCSITE1" jdbcType="VARCHAR" property="twFuncsite1" />
+    <result column="TW_DIV1" jdbcType="VARCHAR" property="twDiv1" />
+    <result column="TW_DEPT1" jdbcType="VARCHAR" property="twDept1" />
+    <result column="TW_SECT1" jdbcType="VARCHAR" property="twSect1" />
+    <result column="TW_DIV1_SHORT" jdbcType="VARCHAR" property="twDiv1Short" />
+    <result column="TW_DIV1_DESCR" jdbcType="VARCHAR" property="twDiv1Descr" />
+    <result column="TW_DIV1_CHIN" jdbcType="VARCHAR" property="twDiv1Chin" />
+    <result column="TW_AREA1_SHORT" jdbcType="VARCHAR" property="twArea1Short" />
+    <result column="TW_AREA1_DESCR" jdbcType="VARCHAR" property="twArea1Descr" />
+    <result column="TW_AREA1_CHIN" jdbcType="VARCHAR" property="twArea1Chin" />
+    <result column="TW_FUNCSITE1_SHORT" jdbcType="VARCHAR" property="twFuncsite1Short" />
+    <result column="TW_FUNCSITE1_DESCR" jdbcType="VARCHAR" property="twFuncsite1Descr" />
+    <result column="TW_FUNCSITE1_CHIN" jdbcType="VARCHAR" property="twFuncsite1Chin" />
+    <result column="TW_DEPT1_SHORT" jdbcType="VARCHAR" property="twDept1Short" />
+    <result column="TW_DEPT1_DESCR" jdbcType="VARCHAR" property="twDept1Descr" />
+    <result column="TW_DEPT1_CHIN" jdbcType="VARCHAR" property="twDept1Chin" />
+  </resultMap>
+  <select id="findSECT" resultType="java.util.Map">
+    select * from CHR_T_DEPT_ORG t left join CHR_T_EMP e
+    on t.manager_id = e.emp_no where t.location = 'FAB10'
+  </select>
+</mapper>
